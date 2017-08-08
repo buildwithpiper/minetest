@@ -175,12 +175,12 @@ DigParams getDigParams(const ItemGroupList &groups,
 	//infostream<<"getDigParams"<<std::endl;
 	/* Check group dig_immediate */
 	switch(itemgroup_get(groups, "dig_immediate")){
-	case 2:
-		//infostream<<"dig_immediate=2"<<std::endl;
+	case 1:
 		return DigParams(true, 0.5, 0, "dig_immediate");
+	case 2:
+		return DigParams(true, 0.15, 0, "dig_immediate");
 	case 3:
-		//infostream<<"dig_immediate=3"<<std::endl;
-		return DigParams(true, 0, 0, "dig_immediate");
+		return DigParams(true, 0.0, 0, "dig_immediate");
 	default:
 		break;
 	}
