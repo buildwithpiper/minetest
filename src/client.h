@@ -426,6 +426,9 @@ public:
 		return m_csm_noderange_limit;
 	}
 
+	bool cursorFree;
+	void setCursorFree(bool free);
+
 private:
 
 	// Virtual methods from con::PeerHandler

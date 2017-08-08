@@ -45,9 +45,11 @@ local player_list = {}
 core.register_on_joinplayer(function(player)
 	local player_name = player:get_player_name()
 	player_list[player_name] = player
+    --[[
 	if not minetest.is_singleplayer() then
 		core.chat_send_all("*** " .. player_name .. " joined the game.")
 	end
+    ]]--
 end)
 
 core.register_on_leaveplayer(function(player, timed_out)
