@@ -240,7 +240,7 @@ void set_default_settings(Settings *settings)
 
 	// Input
 	settings->setDefault("invert_mouse", "false");
-	settings->setDefault("mouse_sensitivity", "0.2");
+	settings->setDefault("mouse_sensitivity", "0.05");
 	settings->setDefault("repeat_rightclick_time", "0.25");
 	settings->setDefault("safe_dig_and_place", "false");
 	settings->setDefault("random_input", "false");
@@ -362,7 +362,7 @@ void set_default_settings(Settings *settings)
 	settings->setDefault("movement_acceleration_default", "3");
 	settings->setDefault("movement_acceleration_air", "2");
 	settings->setDefault("movement_acceleration_fast", "10");
-	settings->setDefault("movement_speed_walk", "4");
+	settings->setDefault("movement_speed_walk", "3.5");
 	settings->setDefault("movement_speed_crouch", "1.35");
 	settings->setDefault("movement_speed_fast", "20");
 	settings->setDefault("movement_speed_climb", "3");
