@@ -437,6 +437,11 @@ public:
 	{
 		return m_env.getLocalPlayer()->formspec_prepend;
 	}
+
+	bool cursorFree;
+	void setCursorFree(bool free);
+
+
 private:
 	void loadMods();
 	bool checkBuiltinIntegrity();

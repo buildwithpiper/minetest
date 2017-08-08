@@ -165,6 +165,7 @@ public:
 
 	std::string inventory_formspec;
 	std::string formspec_prepend;
+	std::string empty_formspec;
 
 	PlayerControl control;
 	const PlayerControl& getPlayerControl() { return control; }

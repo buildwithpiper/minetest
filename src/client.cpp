@@ -113,6 +113,10 @@ Client::Client(
 	m_script = new ClientScripting(this);
 	m_env.setScript(m_script);
 	m_script->setEnv(&m_env);
+
+	setCursorFree(false);
+
+	g_settings->set("free_cursor", "false");
 }
 
 void Client::loadBuiltin()
@@ -1798,6 +1802,11 @@ void Client::pushToEventQueue(ClientEvent *event)
 void Client::showMinimap(const bool show)
 {
 	m_game_ui->showMinimap(show);
+}
+
+void Client::setCursorFree(bool free)
+{
+	cursorFree = free;
 }
 
 // IGameDef interface

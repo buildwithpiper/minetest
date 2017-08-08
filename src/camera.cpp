@@ -558,6 +558,11 @@ void Camera::updateViewingRange()
 	m_cameranode->setFarValue((viewing_range < 2000) ? 2000 * BS : viewing_range * BS);
 }
 
+void Camera::setInputReceiverEnabled(bool enabled)
+{
+	m_cameranode->setInputReceiverEnabled(enabled);
+}
+
 void Camera::setDigging(s32 button)
 {
 	if (m_digging_button == -1)

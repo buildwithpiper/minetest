@@ -70,6 +70,15 @@ private:
 	// sound_fade(handle, step, gain)
 	static int l_sound_fade(lua_State *L);
 
+	// cursor free
+	static int l_free_cursor(lua_State *L);
+
+	// cursor lock
+	static int l_lock_cursor(lua_State *L);
+
+	// Mutability
+	static int l_set_immutable(lua_State *L);
+
 	// get_player_privs(name, text)
 	static int l_get_player_privs(lua_State *L);
 
@@ -105,6 +114,9 @@ private:
 
 	// set_last_run_mod(modname)
 	static int l_set_last_run_mod(lua_State *L);
+
+	// set_setting(setting, value)
+	static int l_set_setting(lua_State *L);
 
 public:
 	static void Initialize(lua_State *L, int top);

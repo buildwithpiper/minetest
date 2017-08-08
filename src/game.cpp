@@ -236,6 +236,23 @@ public:
 	Client *m_client;
 };
 
+class PlayerEmptyFormSource: public IFormSource
+{
+public:
+	PlayerEmptyFormSource(Client *client):
+		m_client(client)
+	{
+	}
+	std::string getForm()
+	{
+		LocalPlayer *player = m_client->getEnv().getLocalPlayer();
+		return player->empty_formspec;
+	}
+
+	Client *m_client;
+};
+
+/* Profiler display */
 class NodeDugEvent: public MtEvent
 {
 public:
@@ -566,6 +583,172 @@ public:
 #define SIZE_TAG "size[11,5.5,true]" // Fixed size on desktop
 #endif
 
+<<<<<<< HEAD
+=======
+/******************************************************************************/
+static void updateChat(Client &client, f32 dtime, bool show_debug,
+		const v2u32 &screensize, bool show_chat, u32 show_profiler,
+		ChatBackend &chat_backend, gui::IGUIStaticText *guitext_chat)
+{
+	// Add chat log output for errors to be shown in chat
+	// static LogOutputBuffer chat_log_error_buf(g_logger, LL_ERROR);
+
+	// // Get new messages from error log buffer
+	// while (!chat_log_error_buf.empty()) {
+	// 	std::wstring error_message = utf8_to_wide(chat_log_error_buf.get());
+	// 	if (!g_settings->getBool("disable_escape_sequences")) {
+	// 		error_message = L"\x1b(c@red)" + error_message + L"\x1b(c@white)";
+	// 	}
+	// 	chat_backend.addMessage(L"", error_message);
+	// }
+
+	// Get new messages from client
+	std::wstring message;
+	while (client.getChatMessage(message)) {
+		chat_backend.addUnparsedMessage(message);
+	}
+
+	// Remove old messages
+	chat_backend.step(dtime);
+
+	// Display all messages in a static text element
+	unsigned int recent_chat_count = chat_backend.getRecentBuffer().getLineCount();
+	EnrichedString recent_chat     = chat_backend.getRecentChat();
+	unsigned int line_height       = g_fontengine->getLineHeight();
+
+	setStaticText(guitext_chat, recent_chat);
+
+	// Update gui element size and position
+	s32 chat_y = 5;
+
+	if (show_debug)
+		chat_y += 2 * line_height;
+
+	// first pass to calculate height of text to be set
+	const v2u32 &window_size = RenderingEngine::get_instance()->getWindowSize();
+	s32 width = std::min(g_fontengine->getTextWidth(recent_chat.c_str()) + 10,
+			window_size.X - 20);
+	core::rect<s32> rect(10, chat_y, width, chat_y + window_size.Y);
+	guitext_chat->setRelativePosition(rect);
+
+	//now use real height of text and adjust rect according to this size
+	rect = core::rect<s32>(10, chat_y, width,
+			       chat_y + guitext_chat->getTextHeight());
+
+
+	guitext_chat->setRelativePosition(rect);
+	// Don't show chat if disabled or empty or profiler is enabled
+	guitext_chat->setVisible(
+		show_chat && recent_chat_count != 0 && !show_profiler);
+}
+
+
+/****************************************************************************
+ Fast key cache for main game loop
+ ****************************************************************************/
+
+/* This is faster than using getKeySetting with the tradeoff that functions
+ * using it must make sure that it's initialised before using it and there is
+ * no error handling (for example bounds checking). This is really intended for
+ * use only in the main running loop of the client (the_game()) where the faster
+ * (up to 10x faster) key lookup is an asset. Other parts of the codebase
+ * (e.g. formspecs) should continue using getKeySetting().
+ */
+struct KeyCache {
+
+	KeyCache()
+	{
+		handler = NULL;
+		populate();
+		populate_nonchanging();
+	}
+
+	void populate();
+
+	// Keys that are not settings dependent
+	void populate_nonchanging();
+
+	KeyPress key[KeyType::INTERNAL_ENUM_COUNT];
+	InputHandler *handler;
+};
+
+void KeyCache::populate_nonchanging()
+{
+	key[KeyType::ESC] = EscapeKey;
+}
+
+void KeyCache::populate()
+{
+	key[KeyType::FORWARD]      = getKeySetting("keymap_forward");
+	key[KeyType::BACKWARD]     = getKeySetting("keymap_backward");
+	key[KeyType::LEFT]         = getKeySetting("keymap_left");
+	key[KeyType::RIGHT]        = getKeySetting("keymap_right");
+	key[KeyType::JUMP]         = getKeySetting("keymap_jump");
+	key[KeyType::SPECIAL1]     = getKeySetting("keymap_special1");
+	key[KeyType::SNEAK]        = getKeySetting("keymap_sneak");
+
+	key[KeyType::AUTOFORWARD]  = getKeySetting("keymap_autoforward");
+
+	key[KeyType::DROP]         = getKeySetting("keymap_drop");
+	key[KeyType::INVENTORY]    = getKeySetting("keymap_inventory");
+	key[KeyType::CHAT]         = getKeySetting("keymap_chat");
+	key[KeyType::CMD]          = getKeySetting("keymap_cmd");
+	key[KeyType::CMD_LOCAL]    = getKeySetting("keymap_cmd_local");
+	key[KeyType::CONSOLE]      = getKeySetting("keymap_console");
+	key[KeyType::MINIMAP]      = getKeySetting("keymap_minimap");
+	key[KeyType::FREEMOVE]     = getKeySetting("keymap_freemove");
+	key[KeyType::FASTMOVE]     = getKeySetting("keymap_fastmove");
+	key[KeyType::NOCLIP]       = getKeySetting("keymap_noclip");
+	key[KeyType::HOTBAR_PREV]  = getKeySetting("keymap_hotbar_previous");
+	key[KeyType::HOTBAR_NEXT]  = getKeySetting("keymap_hotbar_next");
+	key[KeyType::MUTE]         = getKeySetting("keymap_mute");
+	key[KeyType::INC_VOLUME]   = getKeySetting("keymap_increase_volume");
+	key[KeyType::DEC_VOLUME]   = getKeySetting("keymap_decrease_volume");
+	key[KeyType::CINEMATIC]    = getKeySetting("keymap_cinematic");
+	key[KeyType::SCREENSHOT]   = getKeySetting("keymap_screenshot");
+	key[KeyType::TOGGLE_HUD]   = getKeySetting("keymap_toggle_hud");
+	key[KeyType::TOGGLE_CHAT]  = getKeySetting("keymap_toggle_chat");
+	key[KeyType::TOGGLE_FORCE_FOG_OFF]
+			= getKeySetting("keymap_toggle_force_fog_off");
+	key[KeyType::TOGGLE_UPDATE_CAMERA]
+			= getKeySetting("keymap_toggle_update_camera");
+	key[KeyType::TOGGLE_DEBUG]
+			= getKeySetting("keymap_toggle_debug");
+	key[KeyType::TOGGLE_PROFILER]
+			= getKeySetting("keymap_toggle_profiler");
+	key[KeyType::CAMERA_MODE]
+			= getKeySetting("keymap_camera_mode");
+	key[KeyType::INCREASE_VIEWING_RANGE]
+			= getKeySetting("keymap_increase_viewing_range_min");
+	key[KeyType::DECREASE_VIEWING_RANGE]
+			= getKeySetting("keymap_decrease_viewing_range_min");
+	key[KeyType::RANGESELECT]
+			= getKeySetting("keymap_rangeselect");
+	key[KeyType::ZOOM] = getKeySetting("keymap_zoom");
+
+	key[KeyType::QUICKTUNE_NEXT] = getKeySetting("keymap_quicktune_next");
+	key[KeyType::QUICKTUNE_PREV] = getKeySetting("keymap_quicktune_prev");
+	key[KeyType::QUICKTUNE_INC]  = getKeySetting("keymap_quicktune_inc");
+	key[KeyType::QUICKTUNE_DEC]  = getKeySetting("keymap_quicktune_dec");
+
+	for (int i = 0; i < 23; i++) {
+		std::string slot_key_name = "keymap_slot" + std::to_string(i + 1);
+		key[KeyType::SLOT_1 + i] = getKeySetting(slot_key_name.c_str());
+	}
+
+	if (handler) {
+		// First clear all keys, then re-add the ones we listen for
+		handler->dontListenForKeys();
+		for (const KeyPress &k : key) {
+			handler->listenForKey(k);
+		}
+		handler->listenForKey(EscapeKey);
+		handler->listenForKey(CancelKey);
+	}
+}
+
+
+>>>>>>> ebe866c8... Add API to release mouse cursor.
 /****************************************************************************
 
  ****************************************************************************/
@@ -692,6 +875,7 @@ protected:
 
 	void dropSelectedItem(bool single_item = false);
 	void openInventory();
+    void openEmptyMenu();
 	void openConsole(float scale, const wchar_t *line=NULL);
 	void toggleFreeMove();
 	void toggleFreeMoveAlt();
@@ -1137,7 +1321,7 @@ void Game::shutdown()
 	if (current_formspec)
 		current_formspec->quitMenu();
 
-	showOverlayMessage("Shutting down...", 0, 0, false);
+	showOverlayMessage("Porting Back to Base", 0, 0, false);
 
 	if (clouds)
 		clouds->drop();
@@ -2010,6 +2194,19 @@ void Game::dropSelectedItem(bool single_item)
 	client->inventoryAction(a);
 }
 
+void Game::openEmptyMenu()
+{
+    LocalPlayer *player = client->getEnv().getLocalPlayer();
+    if (player == NULL || player->getCAO() == NULL)
+        return;
+
+    infostream << "the_game: " << "Opening empty menu" << std::endl;
+    
+    PlayerEmptyFormSource *fs_src = new PlayerEmptyFormSource(client);
+    TextDest *txt_dst = new TextDestPlayerInventory(client);
+
+    create_formspec_menu(&current_formspec, client, &input->joystick, fs_src, txt_dst);
+}
 
 void Game::openInventory()
 {
@@ -2328,7 +2525,7 @@ void Game::checkZoomEnabled()
 void Game::updateCameraDirection(CameraOrientation *cam, float dtime)
 {
 	if ((device->isWindowActive() && device->isWindowFocused()
-			&& !isMenuActive()) || random_input) {
+			&& !isMenuActive() && g_settings->get("free_cursor") != "true") || random_input) {
 
 #ifndef __ANDROID__
 		if (!random_input) {

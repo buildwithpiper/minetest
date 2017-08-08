@@ -45,7 +45,7 @@ local player_list = {}
 
 function core.send_join_message(player_name)
 	if not minetest.is_singleplayer() then
-		core.chat_send_all("*** " .. player_name .. " joined the game.")
+		--- core.chat_send_all("*** " .. player_name .. " joined the game.")
 	end
 end
 
