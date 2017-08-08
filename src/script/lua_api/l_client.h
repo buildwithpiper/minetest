@@ -94,6 +94,12 @@ private:
 	// get_builtin_path()
 	static int l_get_builtin_path(lua_State *L);
 
+	// Free mouse cursor from window
+	static int l_free_cursor(lua_State *L);
+
+	// Lock cursor to window
+	static int l_lock_cursor(lua_State *L);
+
 public:
 	static void Initialize(lua_State *L, int top);
 };
