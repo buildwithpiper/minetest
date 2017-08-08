@@ -148,6 +148,7 @@ public:
 	float local_animation_speed;
 
 	std::string inventory_formspec;
+	std::string empty_formspec;
 
 	PlayerControl control;
 	const PlayerControl& getPlayerControl() { return control; }
