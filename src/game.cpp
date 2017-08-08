@@ -235,6 +235,21 @@ public:
 	Client *m_client;
 };
 
+class PlayerEmptyFormSource: public IFormSource
+{
+public:
+	PlayerEmptyFormSource(Client *client):
+		m_client(client)
+	{
+	}
+	std::string getForm()
+	{
+		LocalPlayer *player = m_client->getEnv().getLocalPlayer();
+		return player->empty_formspec;
+	}
+
+	Client *m_client;
+};
 /* Profiler display */
 
 void update_profiler_gui(gui::IGUIStaticText *guitext_profiler, FontEngine *fe,
@@ -959,16 +974,16 @@ static void updateChat(Client &client, f32 dtime, bool show_debug,
 		ChatBackend &chat_backend, gui::IGUIStaticText *guitext_chat)
 {
 	// Add chat log output for errors to be shown in chat
-	static LogOutputBuffer chat_log_error_buf(g_logger, LL_ERROR);
+	// static LogOutputBuffer chat_log_error_buf(g_logger, LL_ERROR);
 
-	// Get new messages from error log buffer
-	while (!chat_log_error_buf.empty()) {
-		std::wstring error_message = utf8_to_wide(chat_log_error_buf.get());
-		if (!g_settings->getBool("disable_escape_sequences")) {
-			error_message = L"\x1b(c@red)" + error_message + L"\x1b(c@white)";
-		}
-		chat_backend.addMessage(L"", error_message);
-	}
+	// // Get new messages from error log buffer
+	// while (!chat_log_error_buf.empty()) {
+	// 	std::wstring error_message = utf8_to_wide(chat_log_error_buf.get());
+	// 	if (!g_settings->getBool("disable_escape_sequences")) {
+	// 		error_message = L"\x1b(c@red)" + error_message + L"\x1b(c@white)";
+	// 	}
+	// 	chat_backend.addMessage(L"", error_message);
+	// }
 
 	// Get new messages from client
 	std::wstring message;
@@ -1261,6 +1276,7 @@ protected:
 
 	void dropSelectedItem(bool single_item = false);
 	void openInventory();
+    void openEmptyMenu();
 	void openConsole(float scale, const wchar_t *line=NULL);
 	void toggleFreeMove();
 	void toggleFreeMoveAlt();
@@ -1755,7 +1771,7 @@ void Game::shutdown()
 	if (current_formspec)
 		current_formspec->quitMenu();
 
-	showOverlayMessage("Shutting down...", 0, 0, false);
+	showOverlayMessage("Porting Back to Base", 0, 0, false);
 
 	if (clouds)
 		clouds->drop();
@@ -2655,6 +2671,19 @@ void Game::dropSelectedItem(bool single_item)
 	client->inventoryAction(a);
 }
 
+void Game::openEmptyMenu()
+{
+    LocalPlayer *player = client->getEnv().getLocalPlayer();
+    if (player == NULL || player->getCAO() == NULL)
+        return;
+
+    infostream << "the_game: " << "Opening empty menu" << std::endl;
+    
+    PlayerEmptyFormSource *fs_src = new PlayerEmptyFormSource(client);
+    TextDest *txt_dst = new TextDestPlayerInventory(client);
+
+    create_formspec_menu(&current_formspec, client, &input->joystick, fs_src, txt_dst);
+}
 
 void Game::openInventory()
 {
@@ -3022,7 +3051,7 @@ void Game::toggleFullViewRange()
 void Game::updateCameraDirection(CameraOrientation *cam, float dtime)
 {
 	if ((device->isWindowActive() && device->isWindowFocused()
-			&& !isMenuActive()) || random_input) {
+			&& !isMenuActive() && g_settings->get("free_cursor") != "true") || random_input) {
 
 #ifndef __ANDROID__
 		if (!random_input) {

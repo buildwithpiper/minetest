@@ -505,6 +505,57 @@ int ModApiServer::l_set_last_run_mod(lua_State *L)
 	return 0;
 }
 
+// Free cursor
+int ModApiServer::l_free_cursor(lua_State *L)
+{
+	NO_MAP_LOCK_REQUIRED;
+	lua_pushboolean(L, true);
+	// bool free = dynamic_cast<ServerEnvironment *>(getClient(L))->cursorFree;
+	// RemotePlayer *player = dynamic_cast<ServerEnvironment *>(getEnv(L))->getPlayer(name);
+	g_settings->set("free_cursor", "true");
+	// actionstream << "Set to " << g_settings->get("TEST") << std::endl;
+	// actionstream << getClient(L)->cursorFree << std::endl;
+	// getClient(L);
+	// getGuiEngine(L)->setCursorFree(true);
+	return 1;
+}
+
+// Lock cursor
+int ModApiServer::l_lock_cursor(lua_State *L)
+{
+	NO_MAP_LOCK_REQUIRED;
+	lua_pushboolean(L, false);
+	g_settings->set("free_cursor", "false");
+	// actionstream << "Set to " << g_settings->get("TEST") << std::endl;
+	return 1;
+}
+
+// Set Mutability
+int ModApiServer::l_set_immutable(lua_State *L)
+{
+	bool setTo = lua_toboolean(L, 1);
+	g_settings->setBool("immutable", setTo);
+
+	return 1;
+}
+
+// Set any setting
+int ModApiServer::l_set_setting(lua_State *L)
+{
+	const char *setting = lua_tostring(L, 1);
+	const char *value = lua_tostring(L, 2);
+
+	try {
+		g_settings->get(setting);
+	}
+	catch (const SettingNotFoundException& e) {
+		errorstream << e.what() << std::endl;
+		return 1;
+	}
+	g_settings->set(setting, value);
+	return 1;
+}
+
 void ModApiServer::Initialize(lua_State *L, int top)
 {
 	API_FCT(request_shutdown);
@@ -539,4 +590,11 @@ void ModApiServer::Initialize(lua_State *L, int top)
 
 	API_FCT(get_last_run_mod);
 	API_FCT(set_last_run_mod);
+
+	API_FCT(free_cursor);
+	API_FCT(lock_cursor);
+
+	API_FCT(set_immutable);
+
+	API_FCT(set_setting);
 }
