@@ -1304,7 +1304,7 @@ protected:
 	 */
 	PointedThing updatePointedThing(
 			const core::line3d<f32> &shootline, bool liquids_pointable,
-			bool look_for_object, const v3s16 &camera_offset);
+			bool look_for_object, const v3s16 &camera_offset, LocalPlayer &player);
 	void handlePointingAtNothing(const ItemStack &playerItem);
 	void handlePointingAtNode(const PointedThing &pointed,
 		const ItemDefinition &playeritem_def, const ItemStack &playeritem,
@@ -3635,7 +3635,8 @@ void Game::processPlayerInteraction(f32 dtime, bool show_hud, bool show_debug)
 	PointedThing pointed = updatePointedThing(shootline,
 			playeritem_def.liquids_pointable,
 			!runData.ldown_for_dig,
-			camera_offset);
+			camera_offset,
+            *player);
 
 	if (pointed != runData.pointed_old) {
 		infostream << "Pointing at " << pointed.dump() << std::endl;
@@ -3746,7 +3747,8 @@ PointedThing Game::updatePointedThing(
 	const core::line3d<f32> &shootline,
 	bool liquids_pointable,
 	bool look_for_object,
-	const v3s16 &camera_offset)
+	const v3s16 &camera_offset,
+    LocalPlayer &player)
 {
 	std::vector<aabb3f> *selectionboxes = hud->getSelectionBoxes();
 	selectionboxes->clear();
@@ -3793,6 +3795,9 @@ PointedThing Game::updatePointedThing(
 			result.intersection_normal.X,
 			result.intersection_normal.Y,
 			result.intersection_normal.Z));
+
+        // Update player so she knows if she's climbing something (looking at a ladder)
+        player.pointed_name = nodedef_manager->get(n).name;
 	}
 
 	// Update selection mesh light level and vertex colors
@@ -4461,7 +4466,21 @@ void Game::updateGui(const RunStats &stats, f32 dtime, const CameraOrientation &
 		   << ", " << (player_position.Z / BS)
 		   << "), yaw = " << (wrapDegrees_0_360(cam.camera_yaw)) << "°"
 		   << " " << yawToDirectionString(cam.camera_yaw)
-		   << ", seed = " << ((u64)client->getMapSeed());
+		   << ", seed = " << ((u64)client->getMapSeed())
+		   << ")";
+
+		if (runData.pointed_old.type == POINTEDTHING_NODE) {
+			ClientMap &map = client->getEnv().getClientMap();
+			const INodeDefManager *nodedef = client->getNodeDefManager();
+			MapNode n = map.getNodeNoEx(runData.pointed_old.node_undersurface);
+			if (n.getContent() != CONTENT_IGNORE && nodedef->get(n).name != "unknown") {
+				const ContentFeatures &features = nodedef->get(n);
+				os << " (pointing_at = " << (features).name
+				   << " - " << features.tiledef[0].name.c_str()
+				   << ")";
+			}
+		}
+
 		setStaticText(guitext2, utf8_to_wide(os.str()).c_str());
 		guitext2->setVisible(true);
 	} else {
