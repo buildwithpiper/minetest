@@ -57,7 +57,9 @@ public:
 	// This is more stable and defines the maximum speed of the player
 	bool in_liquid_stable = false;
 	// Gets the viscosity of water to calculate friction
+
 	u8 liquid_viscosity = 0;
+	std::string pointed_name;
 	bool is_climbing = false;
 	bool swimming_vertical = false;
 	bool is_slipping = false;
