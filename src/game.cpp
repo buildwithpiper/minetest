@@ -3495,7 +3495,7 @@ void Game::handleDigging(const PointedThing &pointed, const v3s16 &nodepos,
 			params = getDigParams(nodedef_manager->get(n).groups, tp);
 	}
 
-	if (!params.diggable) {
+	if (!params.diggable || g_settings->getBool("immutable")) {
 		// I guess nobody will wait for this long
 		runData.dig_time_complete = 10000000.0;
 	} else {

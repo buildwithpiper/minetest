@@ -179,6 +179,12 @@ DigParams getDigParams(const ItemGroupList &groups,
 	case 3:
 		return DigParams(true, 0, 0, "dig_immediate");
 	default:
+		return DigParams(true, 0.5, 0, "dig_immediate");
+	case 2:
+		return DigParams(true, 0.15, 0, "dig_immediate");
+	case 3:
+		return DigParams(true, 0, 0, "dig_immediate");
+	default:
 		break;
 	}
 
