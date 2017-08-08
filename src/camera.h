@@ -120,6 +120,9 @@ public:
 	// Update render distance
 	void updateViewingRange();
 
+	// Set Input receiver -- used for releasing mouse
+	void setInputReceiverEnabled(bool enabled);
+
 	// Start digging animation
 	// Pass 0 for left click, 1 for right click
 	void setDigging(s32 button);
