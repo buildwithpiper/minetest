@@ -111,6 +111,10 @@ Client::Client(
 	m_script = new ClientScripting(this);
 	m_env.setScript(m_script);
 	m_script->setEnv(&m_env);
+
+	setCursorFree(false);
+
+	g_settings->set("free_cursor", "false");
 }
 
 void Client::loadMods()
@@ -1788,6 +1792,11 @@ void Client::showGameFog(const bool show)
 void Client::showGameDebug(const bool show)
 {
 	m_game_ui_flags->show_debug = show;
+}
+
+void Client::setCursorFree(bool free)
+{
+	cursorFree = free;
 }
 
 // IGameDef interface

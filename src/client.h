@@ -432,6 +432,9 @@ public:
 	bool sendModChannelMessage(const std::string &channel, const std::string &message);
 	ModChannel *getModChannel(const std::string &channel);
 
+	bool cursorFree;
+	void setCursorFree(bool free);
+
 private:
 
 	// Virtual methods from con::PeerHandler
