@@ -265,9 +265,11 @@ void LocalPlayer::move(f32 dtime, Environment *env, f32 pos_max_d,
 
 	if (!(is_valid_position && is_valid_position2)) {
 		is_climbing = false;
-	} else {
+	}  else {
 		is_climbing = (nodemgr->get(node.getContent()).climbable
-				|| nodemgr->get(node2.getContent()).climbable) && !free_move;
+				|| nodemgr->get(node2.getContent()).climbable) && !free_move
+				&& (pointed_name.find("ladder") != std::string::npos ||
+					!g_settings->getBool("forward_climbs"));
 	}
 
 	/*
@@ -583,11 +585,20 @@ void LocalPlayer::applyControl(float dtime, Environment *env)
 	if (continuous_forward)
 		speedH += move_direction;
 
+
 	if (control.up) {
 		if (continuous_forward) {
 			if (fast_move)
 				superspeed = true;
-		} else {
+		} 
+        else if(g_settings->getBool("forward_climbs") && is_climbing) { // && facing the ladder
+       
+			if(fast_climb)
+				speedV.Y = movement_speed_fast;
+			else
+				speedV.Y = movement_speed_climb;
+		}
+        else {
 			speedH += move_direction;
 		}
 	}
