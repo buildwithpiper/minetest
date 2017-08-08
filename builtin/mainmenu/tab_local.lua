@@ -97,12 +97,12 @@ local function get_formspec(tabview, name, tabdata)
 			"button[6.5,4.15;2.8,0.5;world_create;".. fgettext("New") .. "]" ..
 			"button[9.2,4.15;2.55,0.5;world_configure;".. fgettext("Configure") .. "]" ..
 			"label[4,-0.25;".. fgettext("Select World:") .. "]"..
-			"checkbox[0.25,0.25;cb_creative_mode;".. fgettext("Creative Mode") .. ";" ..
-			dump(core.settings:get_bool("creative_mode")) .. "]"..
-			"checkbox[0.25,0.7;cb_enable_damage;".. fgettext("Enable Damage") .. ";" ..
-			dump(core.settings:get_bool("enable_damage")) .. "]"..
-			"checkbox[0.25,1.15;cb_server;".. fgettext("Host Server") ..";" ..
-			dump(core.settings:get_bool("enable_server")) .. "]" ..
+			--"checkbox[0.25,0.25;cb_creative_mode;".. fgettext("Creative Mode") .. ";" ..
+			--dump(core.settings:get_bool("creative_mode")) .. "]"..
+			--"checkbox[0.25,0.7;cb_enable_damage;".. fgettext("Enable Damage") .. ";" ..
+			--dump(core.settings:get_bool("enable_damage")) .. "]"..
+			--"checkbox[0.25,1.15;cb_server;".. fgettext("Host Server") ..";" ..
+			--dump(core.settings:get_bool("enable_server")) .. "]" ..
 			"textlist[4,0.25;7.5,3.7;sp_worlds;" ..
 			menu_render_worldlist() ..
 			";" .. index .. "]"
@@ -310,7 +310,7 @@ end
 --------------------------------------------------------------------------------
 return {
 	name = "local",
-	caption = fgettext("Local Game"),
+	caption = fgettext("Piper"),
 	cbf_formspec = get_formspec,
 	cbf_button_handler = main_button_handler,
 	on_change = on_change
