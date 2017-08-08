@@ -51,6 +51,7 @@ Player::Player(const char *name, IItemDefManager *idef):
 		"listring[]"
 		"list[current_player;craftpreview;7,1;1,1;]";
 
+    empty_formspec = "size[8,7.5]";
 	// Initialize movement settings at default values, so movement can work
 	// if the server fails to send them
 	movement_acceleration_default   = 3    * BS;

@@ -149,6 +149,7 @@ public:
 	u16 peer_id = PEER_ID_INEXISTENT;
 
 	std::string inventory_formspec;
+	std::string empty_formspec;
 
 	PlayerControl control;
 	const PlayerControl& getPlayerControl() { return control; }
