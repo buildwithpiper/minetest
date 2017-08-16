@@ -78,6 +78,7 @@ private:
 
 	// Mutability
 	static int l_set_immutable(lua_State *L);
+	static int l_get_immutable(lua_State *L);
 
 	// get_player_privs(name, text)
 	static int l_get_player_privs(lua_State *L);
