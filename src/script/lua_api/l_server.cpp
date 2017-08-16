@@ -537,6 +537,15 @@ int ModApiServer::l_set_immutable(lua_State *L)
 	return 1;
 }
 
+// Get Mutability
+int ModApiServer::l_get_immutable(lua_State *L)
+{
+	bool val = g_settings->getBool("immutable");
+    lua_pushboolean(L, val);
+
+	return 1;
+}
+
 // Set any setting
 int ModApiServer::l_set_setting(lua_State *L)
 {
@@ -593,6 +602,7 @@ void ModApiServer::Initialize(lua_State *L, int top)
 	API_FCT(lock_cursor);
 
 	API_FCT(set_immutable);
+	API_FCT(get_immutable);
 
 	API_FCT(set_setting);
 }
