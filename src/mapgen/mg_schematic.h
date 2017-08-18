@@ -108,9 +108,11 @@ public:
 	bool serializeToLua(std::ostream *os, const std::vector<std::string> &names,
 		bool use_comments, u32 indent_spaces);
 
+	void eraseToVManip(MMVManip *vm, v3s16 p, Rotation rot);
 	void blitToVManip(MMVManip *vm, v3s16 p, Rotation rot, bool force_place);
 	bool placeOnVManip(MMVManip *vm, v3s16 p, u32 flags, Rotation rot, bool force_place);
 	void placeOnMap(ServerMap *map, v3s16 p, u32 flags, Rotation rot, bool force_place);
+	void eraseOnMap(ServerMap *map, v3s16 p, u32 flags, Rotation rot);
 
 	void applyProbabilities(v3s16 p0,
 		std::vector<std::pair<v3s16, u8> > *plist,
