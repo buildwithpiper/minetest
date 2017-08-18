@@ -1379,6 +1379,54 @@ int ModApiMapgen::l_create_schematic(lua_State *L)
 	return 1;
 }
 
+// erase schematic(schematic)
+int ModApiMapgen::l_get_schematic_size(lua_State *L)
+{
+	SchematicManager *schemmgr = getServer(L)->getEmergeManager()->schemmgr;
+
+	//// Read schematic
+	Schematic *schem = get_or_load_schematic(L, 1, schemmgr, NULL);
+	if (!schem) {
+		errorstream << "get_schematic_size: failed to get schematic" << std::endl;
+		return 0;
+	}
+
+	push_v3s16(L, schem->size);
+	return 1;
+}
+
+// erase schematic(schematic)
+int ModApiMapgen::l_erase_schematic(lua_State *L)
+{
+	MAP_LOCK_REQUIRED;
+
+	GET_ENV_PTR;
+
+	ServerMap *map = &(env->getServerMap());
+	SchematicManager *schemmgr = getServer(L)->getEmergeManager()->schemmgr;
+
+	//// Read position
+	v3s16 p = check_v3s16(L, 1);
+
+	//// Read rotation
+	int rot = ROTATE_0;
+	const char *enumstr = lua_tostring(L, 3);
+	if (enumstr)
+		string_to_enum(es_Rotation, rot, std::string(enumstr));
+
+	//// Read schematic
+	Schematic *schem = get_or_load_schematic(L, 2, schemmgr, NULL);
+	if (!schem) {
+		errorstream << "erase_schematic: failed to get schematic" << std::endl;
+		return 0;
+	}
+
+	schem->eraseOnMap(map, p, 0, (Rotation)rot);
+
+	lua_pushboolean(L, true);
+	return 1;
+}
+
 
 // place_schematic(p, schematic, rotation, replacement)
 int ModApiMapgen::l_place_schematic(lua_State *L)
@@ -1545,7 +1593,9 @@ void ModApiMapgen::Initialize(lua_State *L, int top)
 	API_FCT(generate_ores);
 	API_FCT(generate_decorations);
 	API_FCT(create_schematic);
+	API_FCT(get_schematic_size);
 	API_FCT(place_schematic);
+	API_FCT(erase_schematic);
 	API_FCT(place_schematic_on_vmanip);
 	API_FCT(serialize_schematic);
 }
