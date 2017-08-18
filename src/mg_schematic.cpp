@@ -90,6 +90,73 @@ void Schematic::resolveNodeNames()
 	}
 }
 
+// TODO: make an iterator to de duplicate the logic between
+// this and blitToVManip
+void Schematic::eraseToVManip(MMVManip *vm, v3s16 p, Rotation rot)
+{
+	sanity_check(m_ndef != NULL);
+
+	int xstride = 1;
+	int ystride = size.X;
+	int zstride = size.X * size.Y;
+
+	s16 sx = size.X;
+	s16 sy = size.Y;
+	s16 sz = size.Z;
+
+	int i_start, i_step_x, i_step_z;
+	switch (rot) {
+		case ROTATE_90:
+			i_start  = sx - 1;
+			i_step_x = zstride;
+			i_step_z = -xstride;
+			SWAP(s16, sx, sz);
+			break;
+		case ROTATE_180:
+			i_start  = zstride * (sz - 1) + sx - 1;
+			i_step_x = -xstride;
+			i_step_z = -zstride;
+			break;
+		case ROTATE_270:
+			i_start  = zstride * (sz - 1);
+			i_step_x = -zstride;
+			i_step_z = xstride;
+			SWAP(s16, sx, sz);
+			break;
+		default:
+			i_start  = 0;
+			i_step_x = xstride;
+			i_step_z = zstride;
+	}
+
+	s16 y_map = p.Y;
+	for (s16 y = 0; y != sy; y++) {
+		if ((slice_probs[y] != MTSCHEM_PROB_ALWAYS) &&
+			(slice_probs[y] <= myrand_range(1, MTSCHEM_PROB_ALWAYS)))
+			continue;
+
+		for (s16 z = 0; z != sz; z++) {
+			u32 i = z * i_step_z + y * ystride + i_start;
+			for (s16 x = 0; x != sx; x++, i += i_step_x) {
+				u32 vi = vm->m_area.index(p.X + x, y_map, p.Z + z);
+				if (!vm->m_area.contains(vi))
+					continue;
+
+				if (schemdata[i].getContent() == CONTENT_IGNORE || schemdata[i].getContent() == CONTENT_AIR)
+					continue;
+
+                MapNode n_air(CONTENT_AIR);
+
+				vm->m_data[vi] = n_air;
+				vm->m_data[vi].param1 = 0;
+
+				if (rot)
+					vm->m_data[vi].rotateAlongYAxis(m_ndef, rot);
+			}
+		}
+		y_map++;
+	}
+}
 
 void Schematic::blitToVManip(MMVManip *vm, v3s16 p, Rotation rot, bool force_place)
 {
@@ -199,6 +266,58 @@ bool Schematic::placeOnVManip(MMVManip *vm, v3s16 p, u32 flags,
 	return vm->m_area.contains(VoxelArea(p, p + s - v3s16(1,1,1)));
 }
 
+
+// TODO: de-duplicate logic between this and placeOnMap 
+void Schematic::eraseOnMap(ServerMap *map, v3s16 p, u32 flags,
+	Rotation rot)
+{
+    errorstream << "erasing on map" << std::endl;
+	std::map<v3s16, MapBlock *> lighting_modified_blocks;
+	std::map<v3s16, MapBlock *> modified_blocks;
+	std::map<v3s16, MapBlock *>::iterator it;
+
+	assert(map != NULL);
+	assert(schemdata != NULL);
+	sanity_check(m_ndef != NULL);
+
+	//// Determine effective rotation and effective schematic dimensions
+	if (rot == ROTATE_RAND)
+		rot = (Rotation)myrand_range(ROTATE_0, ROTATE_270);
+
+	v3s16 s = (rot == ROTATE_90 || rot == ROTATE_270) ?
+			v3s16(size.Z, size.Y, size.X) : size;
+
+	//// Adjust placement position if necessary
+	if (flags & DECO_PLACE_CENTER_X)
+		p.X -= (s.X + 1) / 2;
+	if (flags & DECO_PLACE_CENTER_Y)
+		p.Y -= (s.Y + 1) / 2;
+	if (flags & DECO_PLACE_CENTER_Z)
+		p.Z -= (s.Z + 1) / 2;
+
+	//// Create VManip for effected area, emerge our area, modify area
+	//// inside VManip, then blit back.
+	v3s16 bp1 = getNodeBlockPos(p);
+	v3s16 bp2 = getNodeBlockPos(p + s - v3s16(1,1,1));
+
+	MMVManip vm(map);
+	vm.initialEmerge(bp1, bp2);
+
+    errorstream << p.X << " " << p.Y << " " << p.Z << " " << rot << std::endl;
+	eraseToVManip(&vm, p, rot);
+
+	voxalgo::blit_back_with_light(map, &vm, &modified_blocks);
+
+	//// Carry out post-map-modification actions
+
+	//// Create & dispatch map modification events to observers
+	MapEditEvent event;
+	event.type = MEET_OTHER;
+	for (it = modified_blocks.begin(); it != modified_blocks.end(); ++it)
+		event.modified_blocks.insert(it->first);
+
+	map->dispatchEvent(&event);
+}
 void Schematic::placeOnMap(ServerMap *map, v3s16 p, u32 flags,
 	Rotation rot, bool force_place)
 {
