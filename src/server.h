@@ -163,6 +163,7 @@ public:
 	void handleCommand_FirstSrp(NetworkPacket* pkt);
 	void handleCommand_SrpBytesA(NetworkPacket* pkt);
 	void handleCommand_SrpBytesM(NetworkPacket* pkt);
+	void handleCommand_PluginMessage(NetworkPacket* pkt);
 
 	void ProcessData(NetworkPacket *pkt);
 
@@ -223,6 +224,8 @@ public:
 		bool collisiondetection, bool collision_removal,
 		bool vertical, const std::string &texture,
 		const struct TileAnimationParams &animation, u8 glow);
+
+	void sendPluginMessage(const char *name, const std::string &plugin, const std::string &data);
 
 	u32 addParticleSpawner(u16 amount, float spawntime,
 		v3f minpos, v3f maxpos,

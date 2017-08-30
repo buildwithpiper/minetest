@@ -2004,3 +2004,10 @@ std::string Client::getModStoragePath() const
 {
 	return porting::path_user + DIR_DELIM + "client" + DIR_DELIM + "mod_storage";
 }
+
+void Client::sendPluginMessage(const std::string &plugin, const std::string &data)
+{
+	NetworkPacket pkt(TOSERVER_PLUGIN_MESSAGE, 0);
+	pkt << plugin << data;
+	Send(&pkt);
+}
