@@ -777,10 +777,4 @@ end
 -- Uncomment to generate minetest.conf.example and settings_translation_file.cpp
 -- For RUN_IN_PLACE the generated files may appear in the bin folder
 
--- *** Please note ***
--- There is text in minetest.conf.example that will not be generated from
--- settingtypes.txt but must be preserved:
--- The documentation of mapgen noise parameter formats (title plus 16 lines)
--- Noise parameter 'mgv5_np_ground' in group format (13 lines)
-
 --assert(loadfile(core.get_builtin_path().."mainmenu"..DIR_DELIM.."generate_from_settingtypes.lua"))(parse_config_file(true, false))

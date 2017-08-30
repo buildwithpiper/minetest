@@ -134,13 +134,13 @@ local function init_globals()
 	else
 		tv_main:set_autosave_tab(true)
 		tv_main:add(tabs.local_game)
-		--tv_main:add(tabs.play_online)
-		--tv_main:add(tabs.settings)
-		--tv_main:add(tabs.texturepacks)
+		tv_main:add(tabs.play_online)
+		tv_main:add(tabs.settings)
+		tv_main:add(tabs.texturepacks)
 	end
 
-	--tv_main:add(tabs.mods)
-	--tv_main:add(tabs.credits)
+	tv_main:add(tabs.mods)
+	tv_main:add(tabs.credits)
 
 	tv_main:set_global_event_handler(main_event_handler)
 	tv_main:set_fixed_size(false)
