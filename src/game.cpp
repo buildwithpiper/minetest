@@ -243,7 +243,7 @@ public:
 		m_client(client)
 	{
 	}
-	std::string getForm()
+	const std::string &getForm() const
 	{
 		LocalPlayer *player = m_client->getEnv().getLocalPlayer();
 		return player->empty_formspec;
