@@ -684,10 +684,10 @@ Call these functions only at load time!
     * Newest functions are called first.
     * If any function returns true, the item use is not sent to server.
 * `minetest.register_on_modchannel_message(func(channel_name, message))`
-	* Called when an incoming mod channel message is received
-	* You must have joined some channels before, and server must acknowledge the 
-	  join request.
-	
+    * Called when an incoming mod channel message is received
+    * You must have joined some channels before, and server must acknowledge the
+      join request.
+
 ### Sounds
 * `minetest.sound_play(spec, parameters)`: returns a handle
     * `spec` is a `SimpleSoundSpec`
@@ -761,18 +761,18 @@ Call these functions only at load time!
 
 ### Mod channels
 * `minetest.mod_channel_join(channel_name)`
-	* Client joins channel `channel_name`. If channel has no member it's created. You 
-	  should listen from incoming messages with `minetest.register_on_modchannel_message`
-	  call to receive incoming messages. Warning, this function is asynchronous,
-	  you should use a minetest.after(2, function() ... end) at least, to permit server
-	  acknowledge your request
+    * Client joins channel `channel_name`. If channel has no member it's created. You
+      should listen from incoming messages with `minetest.register_on_modchannel_message`
+      call to receive incoming messages. Warning, this function is asynchronous,
+    * You should use a minetest.after(2, function() ... end) at least, to permit server
+      acknowledge your request
 * `minetest.mod_channel_leave(channel_name)`
-	* Client leaves channel `channel_name`. No more incoming or outgoing messages can be
-	  sent to this channel from client mods.
-* `minetest.mod_channel_send_msg(channel_name, message)`
-	* Send `message` though `channel_name`. You should have joined `channel_name` before.
-	  If `channel_name` was not joined, message will be dropped.
-	  
+    * Client leaves channel `channel_name`. No more incoming or outgoing messages can be
+      sent to this channel from client mods.
+* `minetest.mod_channel_send(channel_name, message)`
+    * Send `message` though `channel_name`. You should have joined `channel_name` before.
+      If `channel_name` was not joined, message will be dropped.
+
 ### Misc.
 * `minetest.parse_json(string[, nullvalue])`: returns something
     * Convert a string containing JSON data into the Lua equivalent

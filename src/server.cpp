@@ -3611,7 +3611,7 @@ bool Server::sendModChannelMessage(const std::string &channel, const std::string
 void Server::broadcastModChannelMessage(const std::string &channel,
 		const std::string &message, u16 from_peer)
 {
-	const auto &peers = m_modchannel_mgr->get_channel_peers(channel);
+	const std::vector<u16> &peers = m_modchannel_mgr->get_channel_peers(channel);
 	if (peers.empty()) {
 		return;
 	}
