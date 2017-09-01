@@ -256,6 +256,7 @@ void ScriptApiSecurity::initializeSecurityClient()
 		"string",
 		"table",
 		"math",
+		"require",
 	};
 	static const char *os_whitelist[] = {
 		"clock",
@@ -299,7 +300,7 @@ void ScriptApiSecurity::initializeSecurityClient()
 	SECURE_API(g, load);
 	SECURE_API(g, loadfile);
 	SECURE_API(g, loadstring);
-	SECURE_API(g, require);
+	//SECURE_API(g, require);
 	lua_pop(L, 2);
 
 
