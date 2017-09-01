@@ -34,6 +34,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "map.h"
 #include "util/string.h"
 #include "nodedef.h"
+#include "client/renderingengine.h"
 
 int ModApiClient::l_get_current_modname(lua_State *L)
 {
@@ -348,6 +349,54 @@ int ModApiClient::l_get_builtin_path(lua_State *L)
 	return 1;
 }
 
+// Free the cursor
+int ModApiClient::l_free_cursor(lua_State *L)
+{
+	lua_pushboolean(L, true);
+
+	return 1;
+}
+
+// Lock the cursor
+int ModApiClient::l_lock_cursor(lua_State *L)
+{
+	lua_pushboolean(L,false);
+
+	return 1;
+}
+
+// Send arbitrary keys to Irrlicht
+int ModApiClient::l_send_keys(lua_State *L)
+{
+	std::string key = luaL_checkstring(L, 1);
+	bool down = lua_toboolean(L,2);
+
+	errorstream << key << std::endl;
+
+	irr::SEvent myEvent;
+
+	if(key == "space")
+		myEvent.KeyInput.Key = irr::KEY_SPACE;
+	else if(key == "a")
+		myEvent.KeyInput.Key = irr::KEY_KEY_A;
+	else if(key == "d")
+		myEvent.KeyInput.Key = irr::KEY_KEY_D;
+	else if(key == "s")
+		myEvent.KeyInput.Key = irr::KEY_KEY_S;
+	else if(key == "w")
+		myEvent.KeyInput.Key = irr::KEY_KEY_W;
+	else if(key == "i")
+		myEvent.KeyInput.Key = irr::KEY_KEY_I;
+
+	myEvent.EventType = irr::EET_KEY_INPUT_EVENT;
+	myEvent.KeyInput.PressedDown = down;
+
+	irr::IrrlichtDevice* dev = RenderingEngine::get_raw_device();
+	dev->postEventFromUser(myEvent);
+	
+	return 0;
+}
+
 void ModApiClient::Initialize(lua_State *L, int top)
 {
 	API_FCT(get_current_modname);
@@ -373,4 +422,7 @@ void ModApiClient::Initialize(lua_State *L, int top)
 	API_FCT(take_screenshot);
 	API_FCT(get_privilege_list);
 	API_FCT(get_builtin_path);
+	API_FCT(free_cursor);
+	API_FCT(lock_cursor);
+	API_FCT(send_keys);
 }
