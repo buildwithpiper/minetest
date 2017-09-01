@@ -760,7 +760,7 @@ Call these functions only at load time!
     * must be called during mod load time
 
 ### Mod channels
-You can find mod channels communication scheme in docs/mod\_channels.png.
+You can find mod channels communication scheme in `docs/mod channels.png`.
 
 * `minetest.mod_channel_join(channel_name)`
     * Client joins channel `channel_name`. If channel has no member it's created. You
