@@ -760,6 +760,8 @@ Call these functions only at load time!
     * must be called during mod load time
 
 ### Mod channels
+You can find mod channels communication scheme in docs/mod\_channels.png.
+
 * `minetest.mod_channel_join(channel_name)`
     * Client joins channel `channel_name`. If channel has no member it's created. You
       should listen from incoming messages with `minetest.register_on_modchannel_message`
