@@ -100,6 +100,8 @@ private:
 	// Lock cursor to window
 	static int l_lock_cursor(lua_State *L);
 
+    // Send arbitrary keys to Irrlicht
+    static int l_send_keys(lua_State *L);
 public:
 	static void Initialize(lua_State *L, int top);
 };
