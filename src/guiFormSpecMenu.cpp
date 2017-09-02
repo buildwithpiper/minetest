@@ -234,6 +234,24 @@ std::vector<std::string>* GUIFormSpecMenu::getDropDownValues(const std::string &
 
 void GUIFormSpecMenu::parseSize(parserData* data, const std::string &element)
 {
+	if ( element == "fullscreen" ) {
+		video::IVideoDriver* driver = Environment->getVideoDriver();
+		v2u32 screenSize = driver->getScreenSize();
+		double magic = 1.5;
+		double gui_scaling = g_settings->getFloat("gui_scaling");
+		double screen_dpi = RenderingEngine::getDisplayDensity() * 96;
+
+
+		//data->invsize.X = screenSize.X/0.5555 / screen_dpi / gui_scaling;
+		//data->invsize.Y = screenSize.Y/0.5555 / screen_dpi / gui_scaling;
+		lockSize(true, screenSize);
+		data->invsize.X = screenSize.X / screen_dpi / gui_scaling * magic;
+		data->invsize.Y = screenSize.Y / screen_dpi / gui_scaling * magic;
+		errorstream << "Screen Size " << screenSize.X << "," << screenSize.Y << std::endl;
+		errorstream << "screen_dpi " << screen_dpi << std::endl;
+		data->explicit_size = true;
+		return;
+	}
 	std::vector<std::string> parts = split(element,',');
 
 	if (((parts.size() == 2) || parts.size() == 3) ||
