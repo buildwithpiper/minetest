@@ -2345,6 +2345,10 @@ inline bool Game::handleCallbacks()
 		return false;
 	}
 
+	if (g_gamecallback->mapchange_requested != "") {
+		return false;
+	}
+
 	if (g_gamecallback->changepassword_requested) {
 		(new GUIPasswordChange(guienv, guiroot, -1,
 				       &g_menumgr, client))->drop();
