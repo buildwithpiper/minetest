@@ -1345,7 +1345,7 @@ void GUIFormSpecMenu::parseImageButton(parserData* data, const std::string &elem
 		geom.Y = (stof(v_geom[1]) * (float)spacing.Y)-(spacing.Y-imgsize.Y);
 
 		bool noclip     = false;
-		bool drawborder = true;
+		bool drawborder = false;
 		std::string pressed_image_name;
 
 		if (parts.size() >= 7) {
