@@ -25,6 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "modalMenu.h"
 #include <cassert>
 #include <list>
+#include <string>
 
 class IGameCallback
 {
@@ -36,6 +37,8 @@ public:
 	virtual void changeVolume() = 0;
 
 	virtual void signalKeyConfigChange() = 0;
+
+	virtual void change_map(std::string) = 0;
 };
 
 extern gui::IGUIEnvironment *guienv;
@@ -153,6 +156,12 @@ public:
 		keyconfig_changed = true;
 	}
 
+	virtual void change_map(std::string mapname)
+	{
+		mapchange_requested = mapname;
+	}
+
+
 
 	bool disconnect_requested = false;
 	bool changepassword_requested = false;
@@ -161,6 +170,7 @@ public:
 	bool shutdown_requested = false;
 
 	bool keyconfig_changed = false;
+	std::string mapchange_requested = "";
 };
 
 extern MainGameCallback *g_gamecallback;
