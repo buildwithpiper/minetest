@@ -378,9 +378,16 @@ bool ClientLauncher::launch_game(std::string &error_message,
 		worldspec.path = game_params.world_path;
 	}
 
+	if (g_gamecallback->mapchange_requested != "")
+	{
+	    worldspec.name = g_gamecallback->mapchange_requested;
+	    worldspec.path = worldspec.path.substr(0, worldspec.path.rfind("/")+1) + worldspec.name;
+	    g_gamecallback->mapchange_requested = "";
+	}
+
 	/* Show the GUI menu
 	 */
-	if (!skip_main_menu) {
+	else if (!skip_main_menu) {
 		main_menu(&menudata);
 
 		// Skip further loading if there was an exit signal.

@@ -148,6 +148,20 @@ int ModApiClient::l_send_respawn(lua_State *L)
 	return 0;
 }
 
+// Change map()
+int ModApiClient::l_change_map(lua_State *L)
+{
+	// Stops badly written Lua code form causing boot loops
+	if (getClient(L)->isShutdown()) {
+		lua_pushboolean(L, false);
+		return 1;
+	}
+    std::string mapname = luaL_checkstring(L,1);
+	g_gamecallback->change_map(mapname);
+	lua_pushboolean(L, true);
+	return 1;
+}
+
 // disconnect()
 int ModApiClient::l_disconnect(lua_State *L)
 {
@@ -413,6 +427,7 @@ void ModApiClient::Initialize(lua_State *L, int top)
 	API_FCT(gettext);
 	API_FCT(get_node_or_nil);
 	API_FCT(get_wielded_item);
+	API_FCT(change_map);
 	API_FCT(disconnect);
 	API_FCT(get_meta);
 	API_FCT(sound_play);

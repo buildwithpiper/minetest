@@ -51,6 +51,9 @@ private:
 	// send_respawn()
 	static int l_send_respawn(lua_State *L);
 
+	// Change map()
+	static int l_change_map(lua_State *L);
+
 	// disconnect()
 	static int l_disconnect(lua_State *L);
 
