@@ -409,6 +409,14 @@ int ModApiClient::l_send_keys(lua_State *L)
 	return 0;
 }
 
+// Get the window id if we're on Linux, else 0
+int ModApiClient::l_get_window_id(lua_State *L)
+{
+    unsigned long id = RenderingEngine::getWindowId();
+    lua_pushinteger(L, id);
+    return 1;
+}
+
 void ModApiClient::Initialize(lua_State *L, int top)
 {
 	API_FCT(get_current_modname);
@@ -438,4 +446,5 @@ void ModApiClient::Initialize(lua_State *L, int top)
 	API_FCT(free_cursor);
 	API_FCT(lock_cursor);
 	API_FCT(send_keys);
+	API_FCT(get_window_id);
 }
