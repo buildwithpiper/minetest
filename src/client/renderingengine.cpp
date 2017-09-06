@@ -199,6 +199,17 @@ void RenderingEngine::setXorgClassHint(
 #endif
 }
 
+unsigned long RenderingEngine::getWindowId()
+{
+   const video::SExposedVideoData &video_data = 
+       RenderingEngine::get_video_driver()->getExposedVideoData();
+
+#ifdef XORG_USED
+    return video_data.OpenGLLinux.X11Window;
+#endif
+    return 0;
+}
+
 bool RenderingEngine::setWindowIcon()
 {
 #if defined(XORG_USED)
