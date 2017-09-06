@@ -50,6 +50,9 @@ public:
 	static const char *getVideoDriverFriendlyName(irr::video::E_DRIVER_TYPE type);
 	static float getDisplayDensity();
 	static v2u32 getDisplaySize();
+	static void setXorgClassHint(const video::SExposedVideoData &video_data,
+			const std::string &name);
+	static unsigned long getWindowId();
 
 	bool setupTopLevelWindow(const std::string &name);
 	void setupTopLevelXorgWindow(const std::string &name);
