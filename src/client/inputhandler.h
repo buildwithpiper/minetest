@@ -37,8 +37,8 @@ class KeyList : private std::list<KeyPress>
 
 	virtual const_iterator find(const KeyPress &key) const
 	{
-		const_iterator f(begin());
-		const_iterator e(end());
+		const_iterator f(super::begin());
+		const_iterator e(super::end());
 
 		while (f != e) {
 			if (*f == key)
@@ -65,7 +65,18 @@ class KeyList : private std::list<KeyPress>
 		return e;
 	}
 
+
 public:
+    virtual iterator begin()
+    {
+        return super::begin();
+    }
+    virtual iterator end()
+    {
+        return super::end();
+    }
+
+	int size() { return super::size(); }
 	void clear() { super::clear(); }
 
 	void set(const KeyPress &key)
@@ -92,7 +103,7 @@ public:
 			push_back(key);
 	}
 
-	bool operator[](const KeyPress &key) const { return find(key) != end(); }
+	bool operator[](const KeyPress &key) const { return find(key) != super::end(); }
 };
 
 class MyEventReceiver : public IEventReceiver
@@ -163,7 +174,6 @@ public:
 	TouchScreenGUI *m_touchscreengui;
 #endif
 
-private:
 	// The current state of keys
 	KeyList keyIsDown;
 	// Whether a key has been pressed or not
@@ -183,6 +193,7 @@ public:
 
 	virtual ~InputHandler() = default;
 
+    virtual KeyList justGimmeTheWholeKeylist() = 0;
 	virtual bool isKeyDown(const KeyPress &keyCode) = 0;
 	virtual bool wasKeyDown(const KeyPress &keyCode) = 0;
 
@@ -224,6 +235,10 @@ public:
 	{
 		m_receiver->joystick = &joystick;
 	}
+    virtual KeyList justGimmeTheWholeKeylist()
+    {
+        return m_receiver->keyIsDown;
+    }
 	virtual bool isKeyDown(const KeyPress &keyCode)
 	{
 		return m_receiver->IsKeyDown(keyCode);
@@ -290,6 +305,7 @@ class RandomInputHandler : public InputHandler
 public:
 	RandomInputHandler() = default;
 
+    virtual KeyList justGimmeTheWholeKeylist() { return keydown; };
 	virtual bool isKeyDown(const KeyPress &keyCode) { return keydown[keyCode]; }
 	virtual bool wasKeyDown(const KeyPress &keyCode) { return false; }
 	virtual v2s32 getMousePos() { return mousepos; }
