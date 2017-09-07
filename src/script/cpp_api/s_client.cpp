@@ -24,6 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "common/c_converter.h"
 #include "common/c_content.h"
 #include "s_item.h"
+#include <list>
 
 void ScriptApiClient::on_mods_loaded()
 {
@@ -205,6 +206,56 @@ bool ScriptApiClient::on_placenode(const PointedThing &pointed, const ItemDefini
 	// Call functions
 	runCallbacks(2, RUN_CALLBACKS_MODE_OR);
 	return lua_toboolean(L, -1);
+}
+
+bool ScriptApiClient::on_raw_input(KeyList keys, bool lmb, bool rmb, s32 wheel)
+{
+	SCRIPTAPI_PRECHECKHEADER
+
+	// Get core.registered_on_item_use
+	lua_getglobal(L, "core");
+	lua_getfield(L, -1, "registered_on_raw_input");
+
+    int i = 1;
+	lua_createtable(L, keys.size(), 0);
+
+    // Push mouse info
+    if(lmb)
+    {
+        lua_pushstring(L, "lmb");
+		lua_rawseti(L, -2, i++);
+    }
+    if(rmb)
+    {
+        lua_pushstring(L, "rmb");
+		lua_rawseti(L, -2, i++);
+    }
+    if(wheel != 0)
+    {
+        if(wheel > 0)
+        {
+            lua_pushstring(L, "wheelup");
+        }
+        else
+        {
+            lua_pushstring(L, "wheeldown");
+        }
+		lua_rawseti(L, -2, i++);
+    }
+
+    // Push all keys
+    std::list<KeyPress>::iterator start(keys.begin());
+    std::list<KeyPress>::iterator end(keys.end());
+    while(start != end)
+    {
+        lua_pushstring(L, (*start).name());
+		lua_rawseti(L, -2, i++);
+        ++start;
+	}
+
+	// Call functions
+	runCallbacks(1, RUN_CALLBACKS_MODE_OR);
+	return lua_toboolean(L, -1); // Don't think this will work reliably for many registered functions
 }
 
 bool ScriptApiClient::on_item_use(const ItemStack &item, const PointedThing &pointed)

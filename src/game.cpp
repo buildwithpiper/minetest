@@ -2006,6 +2006,19 @@ void Game::updateStats(RunStats *stats, const FpsControl &draw_times,
 
 void Game::processUserInput(f32 dtime)
 {
+    // Send Inputs to any LUA mods that want it 
+    // If any lua callback return true, it INTERCEPTS the key, hiding it from the rest of the engine!
+    KeyList allKeys = input->justGimmeTheWholeKeylist();
+    bool lmb = getLeftClicked();
+    bool rmb = getRightClicked();
+	s32 wheel = input->getMouseWheel();
+    bool intercept = client->getScript()->on_raw_input(allKeys, lmb, rmb, wheel);
+    if(intercept)
+    {
+        input->clear();
+    }
+
+
 	// Reset input if window not active or some menu is active
 	if (!device->isWindowActive() || isMenuActive() || guienv->hasFocus(gui_chat_console)) {
 		input->clear();
@@ -2142,6 +2155,7 @@ void Game::processKeyInput()
 	if (quicktune->hasMessage()) {
 		m_game_ui->showStatusText(utf8_to_wide(quicktune->getMessage()));
 	}
+
 }
 
 void Game::processItemSelection(u16 *new_playeritem)

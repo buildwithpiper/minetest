@@ -69,8 +69,8 @@ class KeyList : private std::list<KeyPress>
 
 	virtual const_iterator find(const KeyPress &key) const
 	{
-		const_iterator f(begin());
-		const_iterator e(end());
+		const_iterator f(super::begin());
+		const_iterator e(super::end());
 
 		while (f != e) {
 			if (*f == key)
@@ -97,7 +97,18 @@ class KeyList : private std::list<KeyPress>
 		return e;
 	}
 
+
 public:
+    virtual iterator begin()
+    {
+        return super::begin();
+    }
+    virtual iterator end()
+    {
+        return super::end();
+    }
+
+	int size() { return super::size(); }
 	void clear() { super::clear(); }
 
 	void set(const KeyPress &key)
@@ -124,7 +135,7 @@ public:
 			push_back(key);
 	}
 
-	bool operator[](const KeyPress &key) const { return find(key) != end(); }
+	bool operator[](const KeyPress &key) const { return find(key) != super::end(); }
 };
 
 class MyEventReceiver : public IEventReceiver
@@ -195,7 +206,6 @@ public:
 	TouchScreenGUI *m_touchscreengui;
 #endif
 
-private:
 	// The current state of keys
 	KeyList keyIsDown;
 	// Whether a key has been pressed or not
@@ -222,6 +232,7 @@ public:
 	virtual bool isKeyDown(GameKeyType k) = 0;
 	virtual bool wasKeyDown(GameKeyType k) = 0;
 	virtual bool cancelPressed() = 0;
+    virtual KeyList justGimmeTheWholeKeylist() = 0;
 
 	virtual void listenForKey(const KeyPress &keyCode) {}
 	virtual void dontListenForKeys() {}
@@ -262,6 +273,10 @@ public:
 	{
 		m_receiver->joystick = &joystick;
 	}
+    virtual KeyList justGimmeTheWholeKeylist()
+    {
+        return m_receiver->keyIsDown;
+    }
 	virtual bool isKeyDown(GameKeyType k)
 	{
 		return m_receiver->IsKeyDown(keycache.key[k]) || joystick.isKeyDown(k);
@@ -372,6 +387,7 @@ class RandomInputHandler : public InputHandler
 public:
 	RandomInputHandler() = default;
 
+    virtual KeyList justGimmeTheWholeKeylist() { return keydown; };
 	virtual bool isKeyDown(GameKeyType k) { return keydown[keycache.key[k]]; }
 	virtual bool wasKeyDown(GameKeyType k) { return false; }
 	virtual bool cancelPressed() { return false; }

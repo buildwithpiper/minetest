@@ -27,6 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "util/string.h"
 #include "util/pointedthing.h"
 #include "lua_api/l_item.h"
+#include "client/inputhandler.h"
 
 #ifdef _CRT_MSVCP_CURRENT
 #include <cstdint>
@@ -57,6 +58,7 @@ public:
 	bool on_punchnode(v3s16 p, MapNode node);
 	bool on_placenode(const PointedThing &pointed, const ItemDefinition &item);
 	bool on_item_use(const ItemStack &item, const PointedThing &pointed);
+	bool on_raw_input(KeyList keys, bool lmb, bool rmb, s32 wheel);
 
 	bool on_inventory_open(Inventory *inventory);
 
