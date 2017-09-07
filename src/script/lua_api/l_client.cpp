@@ -391,6 +391,8 @@ int ModApiClient::l_send_keys(lua_State *L)
 
     if(key == "space")
             myEvent.KeyInput.Key = irr::KEY_SPACE;
+    else if(key == "escape")
+            myEvent.KeyInput.Key = irr::KEY_ESCAPE;
     else if(key == "a")
             myEvent.KeyInput.Key = irr::KEY_KEY_A;
     else if(key == "d")
