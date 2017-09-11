@@ -1,6 +1,6 @@
 ## Editors and Development environments
 *~
-*.swp
+*.sw[n-p]
 *.bak*
 *.orig
 # Vim
