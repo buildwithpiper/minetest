@@ -147,6 +147,22 @@ bool ScriptApiServer::on_chat_message(const std::string &name,
 	return ate;
 }
 
+bool ScriptApiServer::on_plugin_message(const std::string &name, const std::string &plugin, const std::string &message)
+{
+	SCRIPTAPI_PRECHECKHEADER
+
+	// Get core.registered_on_chat_messages
+	lua_getglobal(L, "core");
+	lua_getfield(L, -1, "registered_on_plugin_message");
+	// Call callbacks
+	lua_pushstring(L, name.c_str());
+	lua_pushstring(L, plugin.c_str());
+	lua_pushstring(L, message.c_str());
+	runCallbacks(3, RUN_CALLBACKS_MODE_OR_SC);
+	bool ate = lua_toboolean(L, -1);
+	return ate;
+}
+
 void ScriptApiServer::on_shutdown()
 {
 	SCRIPTAPI_PRECHECKHEADER

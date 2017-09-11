@@ -1963,3 +1963,10 @@ ModChannel* Client::getModChannel(const std::string &channel)
 {
 	return m_modchannel_mgr->getModChannel(channel);
 }
+
+void Client::sendPluginMessage(const std::string &plugin, const std::string &data)
+{
+	NetworkPacket pkt(TOSERVER_PLUGIN_MESSAGE, 0);
+	pkt << plugin << data;
+	Send(&pkt);
+}
