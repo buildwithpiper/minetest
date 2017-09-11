@@ -178,6 +178,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 			Breaks compatibility with older clients.
 	PROTOCOL VERSION 36:
 		Backwards compatibility drop
+
 		Add 'can_zoom' to player object properties
 		Add glow to object properties
 		Change TileDef serialization format.
@@ -185,6 +186,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		Mod channels
 		Raise ObjectProperties version to 3 for removing 'can_zoom' and adding
 			'zoom_fov'.
+
+		Add TOCLIENT_PLUGIN_MESSAGE and TOSERVER_PLGUIN_MESSAGE
+			This is a general purpose system for a client plugin to talk to
+			a server plugin.
+
 */
 
 #define LATEST_PROTOCOL_VERSION 36
@@ -642,7 +648,13 @@ enum ToClientCommand
 		std::string bytes_B
 	*/
 
-	TOCLIENT_NUM_MSG_TYPES = 0x61,
+	TOCLIENT_PLUGIN_MESSAGE = 0x61,
+	/*
+		std::string plugin
+		u16 len
+		u8[len] data
+	*/
+	TOCLIENT_NUM_MSG_TYPES = 0x62,
 };
 
 enum ToServerCommand
@@ -857,7 +869,14 @@ enum ToServerCommand
 		std::string bytes_M
 	*/
 
-	TOSERVER_NUM_MSG_TYPES = 0x53,
+	TOSERVER_PLUGIN_MESSAGE = 0x53,
+	/*
+		std::string plugin
+		u16 len
+		u8[len] data
+	*/
+
+	TOSERVER_NUM_MSG_TYPES = 0x55,
 };
 
 enum AuthMechanism

@@ -1837,3 +1837,18 @@ void Server::handleCommand_ModChannelMsg(NetworkPacket *pkt)
 
 	broadcastModChannelMessage(channel_name, channel_msg, pkt->getPeerId());
 }
+
+void Server::handleCommand_PluginMessage(NetworkPacket* pkt) {
+	RemoteClient* client = getClient(pkt->getPeerId(), CS_Invalid);
+	std::string playername = client->getName();
+
+	std::string name;
+	std::string data;
+	*pkt >> name;
+	errorstream << "Got name " << name << std::endl;
+	//std::string data = pkt->readLongString();
+	*pkt >> data;
+	errorstream << "Server: Got Plugin Message from " << playername << " for " << name << " with data [" << data << "]" << std::endl;
+	m_script->on_plugin_message(playername, name, data);
+
+}

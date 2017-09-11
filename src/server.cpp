@@ -3554,6 +3554,31 @@ void Server::unregisterModStorage(const std::string &name)
 	}
 }
 
+void Server::sendPluginMessage(const char *name, const std::string &plugin, const std::string &data)
+{
+	// m_env will be NULL if the server is initializing
+	if (!m_env)
+		return;
+
+	RemotePlayer *player = m_env->getPlayer(name);
+	if (!player) {
+		return;
+	}
+	errorstream<<"Got player!"<<std::endl;
+	if (player->getPeerId() == PEER_ID_INEXISTENT)
+		return;
+
+	errorstream<<"Got peer!"<<std::endl;
+	NetworkPacket pkt(TOCLIENT_PLUGIN_MESSAGE, 0, player->getPeerId());
+	pkt << plugin << data;
+
+	if (player->getPeerId() != PEER_ID_INEXISTENT) {
+		Send(&pkt);
+	} else {
+		m_clients.sendToAll(&pkt);
+	}
+}
+
 void dedicated_server_loop(Server &server, bool &kill)
 {
 	verbosestream<<"dedicated_server_loop()"<<std::endl;

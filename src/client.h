@@ -226,6 +226,7 @@ public:
 	void handleCommand_ModChannelSignal(NetworkPacket *pkt);
 	void handleCommand_SrpBytesSandB(NetworkPacket* pkt);
 	void handleCommand_CSMFlavourLimits(NetworkPacket *pkt);
+	void handleCommand_PluginMessage(NetworkPacket *pkt);
 
 	void ProcessData(NetworkPacket *pkt);
 
@@ -245,6 +246,7 @@ public:
 	void sendDamage(u8 damage);
 	void sendRespawn();
 	void sendReady();
+	void sendPluginMessage(const std::string &plugin, const std::string &data);
 
 	ClientEnvironment& getEnv() { return m_env; }
 	ITextureSource *tsrc() { return getTextureSource(); }
