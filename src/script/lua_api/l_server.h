@@ -119,6 +119,9 @@ private:
 	// set_setting(setting, value)
 	static int l_set_setting(lua_State *L);
 
+	// send_plugin_message(player, plugin, data)
+	static int l_send_plugin_message(lua_State *L);
+
 public:
 	static void Initialize(lua_State *L, int top);
 };

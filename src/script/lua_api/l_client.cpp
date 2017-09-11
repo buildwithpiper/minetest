@@ -370,6 +370,18 @@ int ModApiClient::l_get_builtin_path(lua_State *L)
 	return 1;
 }
 
+// send_plugin_message(plugin, data)
+int ModApiClient::l_send_plugin_message(lua_State *L)
+{
+	NO_MAP_LOCK_REQUIRED;
+	const char *plugin = luaL_checkstring(L, 1);
+	const char *text = luaL_checkstring(L, 2);
+
+	Client *client = getClient(L);
+	client->sendPluginMessage(plugin, text);
+	return 0;
+}
+
 // Free the cursor
 int ModApiClient::l_free_cursor(lua_State *L)
 {
@@ -455,6 +467,7 @@ void ModApiClient::Initialize(lua_State *L, int top)
 	API_FCT(get_privilege_list);
 	API_FCT(get_builtin_path);
 	API_FCT(get_language);
+	API_FCT(send_plugin_message);
 	API_FCT(free_cursor);
 	API_FCT(lock_cursor);
 	API_FCT(send_keys);
