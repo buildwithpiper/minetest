@@ -122,6 +122,7 @@ const ToClientCommandHandler toClientCommandTable[TOCLIENT_NUM_MSG_TYPES] =
 	null_command_handler,
 	{ "TOCLIENT_SRP_BYTES_S_B",            TOCLIENT_STATE_NOT_CONNECTED, &Client::handleCommand_SrpBytesSandB }, // 0x60
 	{ "TOCLIENT_FORMSPEC_PREPEND",         TOCLIENT_STATE_CONNECTED, &Client::handleCommand_FormspecPrepend }, // 0x61,
+	{ "TOCLIENT_PLUGIN_MESSAGE",           TOCLIENT_STATE_CONNECTED, &Client::handleCommand_PluginMessage} //0x62
 };
 
 const static ServerCommandFactory null_command_factory = { "TOSERVER_NULL", 0, false };
@@ -211,4 +212,5 @@ const ServerCommandFactory serverCommandFactoryTable[TOSERVER_NUM_MSG_TYPES] =
 	{ "TOSERVER_FIRST_SRP",          1, true }, // 0x50
 	{ "TOSERVER_SRP_BYTES_A",        1, true }, // 0x51
 	{ "TOSERVER_SRP_BYTES_M",        1, true }, // 0x52
+	{ "TOSERVER_PLUGIN_MESSAGE",	 0, true }, // 0x53
 };

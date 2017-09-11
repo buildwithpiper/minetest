@@ -96,6 +96,9 @@ private:
 	// get_builtin_path()
 	static int l_get_builtin_path(lua_State *L);
 
+	// send_plugin_message(plugin, data)
+	static int l_send_plugin_message(lua_State *L);
+
 	// Free mouse cursor from window
 	static int l_free_cursor(lua_State *L);
 

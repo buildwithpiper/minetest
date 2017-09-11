@@ -565,6 +565,21 @@ int ModApiServer::l_set_setting(lua_State *L)
 	return 1;
 }
 
+// Send Plugin Message
+int ModApiServer::l_send_plugin_message(lua_State *L)
+{
+	NO_MAP_LOCK_REQUIRED;
+	const char *name = luaL_checkstring(L, 1);
+	const char *plugin = luaL_checkstring(L, 2);
+	const char *text = luaL_checkstring(L, 3);
+
+	// Get server from registry
+	Server *server = getServer(L);
+	// Send
+	server->sendPluginMessage(name, plugin, text);
+	return 0;
+}
+
 void ModApiServer::Initialize(lua_State *L, int top)
 {
 	API_FCT(request_shutdown);
@@ -596,6 +611,7 @@ void ModApiServer::Initialize(lua_State *L, int top)
 	API_FCT(remove_player);
 	API_FCT(unban_player_or_ip);
 	API_FCT(notify_authentication_modified);
+	API_FCT(send_plugin_message);
 
 	API_FCT(get_last_run_mod);
 	API_FCT(set_last_run_mod);

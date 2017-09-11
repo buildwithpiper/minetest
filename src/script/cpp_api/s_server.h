@@ -33,6 +33,7 @@ public:
 	// Calls when mods are loaded
 	void on_mods_loaded();
 
+	bool on_plugin_message(const std::string &name, const std::string &plugin, const std::string &message);
 	// Calls on_shutdown handlers
 	void on_shutdown();
 
