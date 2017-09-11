@@ -73,4 +73,5 @@ core.registered_on_placenode, core.register_on_placenode = make_registration()
 core.registered_on_item_use, core.register_on_item_use = make_registration()
 core.registered_on_modchannel_message, core.register_on_modchannel_message = make_registration()
 core.registered_on_raw_input, core.register_on_raw_input = make_registration()
+core.registered_on_plugin_message, core.register_on_plugin_message = make_registration()
 

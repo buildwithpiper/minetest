@@ -275,6 +275,21 @@ bool ScriptApiClient::on_item_use(const ItemStack &item, const PointedThing &poi
 	return lua_toboolean(L, -1);
 }
 
+bool ScriptApiClient::on_plugin_message(const std::string &plugin, const std::string &message)
+{
+	SCRIPTAPI_PRECHECKHEADER
+
+	// Get core.registered_on_chat_messages
+	lua_getglobal(L, "core");
+	lua_getfield(L, -1, "registered_on_plugin_message");
+	// Call callbacks
+	lua_pushstring(L, plugin.c_str());
+	lua_pushstring(L, message.c_str());
+	runCallbacks(2, RUN_CALLBACKS_MODE_OR_SC);
+	bool ate = lua_toboolean(L, -1);
+	return ate;
+}
+
 void ScriptApiClient::setEnv(ClientEnvironment *env)
 {
 	ScriptApiBase::setEnv(env);
