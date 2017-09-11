@@ -29,7 +29,7 @@ public:
 	// Calls on_chat_message handlers
 	// Returns true if script handled message
 	bool on_chat_message(const std::string &name, const std::string &message);
-
+	bool on_plugin_message(const std::string &name, const std::string &plugin, const std::string &message);
 	// Calls on_shutdown handlers
 	void on_shutdown();
 
