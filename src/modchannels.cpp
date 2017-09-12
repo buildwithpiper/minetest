@@ -92,9 +92,8 @@ void ModChannelMgr::registerChannel(const std::string &channel)
 
 bool ModChannelMgr::setChannelState(const std::string &channel, ModChannelState state)
 {
-	if (!channelRegistered(channel)) {
+	if (!channelRegistered(channel))
 		return false;
-	}
 
 	auto channel_it = m_registered_channels.find(channel);
 	channel_it->second->setState(state);
@@ -104,9 +103,8 @@ bool ModChannelMgr::setChannelState(const std::string &channel, ModChannelState 
 
 bool ModChannelMgr::removeChannel(const std::string &channel)
 {
-	if (!channelRegistered(channel)) {
+	if (!channelRegistered(channel))
 		return false;
-	}
 
 	m_registered_channels.erase(channel);
 	return true;
