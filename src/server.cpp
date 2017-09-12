@@ -3618,9 +3618,8 @@ void Server::broadcastModChannelMessage(const std::string &channel,
 		const std::string &message, u16 from_peer)
 {
 	const std::vector<u16> &peers = m_modchannel_mgr->getChannelPeers(channel);
-	if (peers.empty()) {
+	if (peers.empty())
 		return;
-	}
 
 	std::string sender;
 	if (from_peer != PEER_ID_SERVER) {

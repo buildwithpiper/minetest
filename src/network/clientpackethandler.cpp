@@ -1384,11 +1384,13 @@ void Client::handleCommand_ModChannelSignal(NetworkPacket *pkt)
 			infostream << "Server refused our mod channel leave on channel `" << channel
 				<< "`" << std::endl;
 			break;
+#ifndef NDEBUG
 		case MODCHANNEL_SIGNAL_CHANNEL_NOT_REGISTERED:
 			// Generally unused, but ensure we don't do an implementation error
 			infostream << "Server tells us we sent a message on channel `" << channel
 				<< "` but we are not registered. Message was dropped." << std::endl;
 			break;
+#endif
 		case MODCHANNEL_SIGNAL_SET_READ_ONLY:
 			m_modchannel_mgr->setChannelState(channel, MODCHANNEL_STATE_READ_ONLY);
 			infostream << "Server sets mod channel `" << channel
