@@ -767,8 +767,8 @@ You can find mod channels communication scheme in `docs/mod channels.png`.
     * Client joins channel `channel_name`. If channel has no member it's created. You
       should listen from incoming messages with `minetest.register_on_modchannel_message`
       call to receive incoming messages. Warning, this function is asynchronous,
-    * You should use a minetest.after(2, function() ... end) at least, to permit server
-      acknowledge your request
+    * You should use a minetest.register_on_connect(function() ... end) to perform
+      a successful channel join on client startup.
 
 ### Misc.
 * `minetest.parse_json(string[, nullvalue])`: returns something
