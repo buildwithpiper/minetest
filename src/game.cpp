@@ -2493,7 +2493,7 @@ void Game::processUserInput(f32 dtime)
     KeyList allKeys = input->justGimmeTheWholeKeylist();
     bool lmb = getLeftClicked();
     bool rmb = getRightClicked();
-	s32 wheel = input->getMouseWheel();
+	s32 wheel = input->checkMouseWheel();
     bool intercept = client->getScript()->on_raw_input(allKeys, lmb, rmb, wheel);
     if(intercept)
     {
