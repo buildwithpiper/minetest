@@ -133,6 +133,11 @@ public:
 		return a;
 	}
 
+	s32 checkMouseWheel()
+	{
+		return mouse_wheel;
+	}
+
 	void clearInput()
 	{
 		keyIsDown.clear();
@@ -217,6 +222,7 @@ public:
 	virtual void resetRightReleased() = 0;
 
 	virtual s32 getMouseWheel() = 0;
+	virtual s32 checkMouseWheel() = 0;
 
 	virtual void step(float dtime) {}
 
@@ -287,6 +293,7 @@ public:
 	virtual void resetLeftReleased() { m_receiver->leftreleased = false; }
 	virtual void resetRightReleased() { m_receiver->rightreleased = false; }
 
+	virtual s32 checkMouseWheel() { return m_receiver->checkMouseWheel(); }
 	virtual s32 getMouseWheel() { return m_receiver->getMouseWheel(); }
 
 	void clear()
@@ -324,6 +331,7 @@ public:
 	virtual void resetLeftReleased() { leftreleased = false; }
 	virtual void resetRightReleased() { rightreleased = false; }
 
+	virtual s32 checkMouseWheel() { return 0; }
 	virtual s32 getMouseWheel() { return 0; }
 
 	virtual void step(float dtime)
