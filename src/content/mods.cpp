@@ -286,7 +286,7 @@ void ModConfiguration::addModsFromConfig(
 				conf.setBool("load_mod_" + mod.name, false);
 		}
 	}
-	conf.updateConfigFile(settings_path.c_str());
+	//conf.updateConfigFile(settings_path.c_str());
 
 	addMods(addon_mods);
 	checkConflictsAndDeps();
