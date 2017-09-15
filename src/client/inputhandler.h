@@ -145,6 +145,7 @@ public:
 
 		leftclicked = false;
 		rightclicked = false;
+		middleclicked = false;
 		leftreleased = false;
 		rightreleased = false;
 
@@ -164,8 +165,10 @@ public:
 
 	bool leftclicked = false;
 	bool rightclicked = false;
+	bool middleclicked = false;
 	bool leftreleased = false;
 	bool rightreleased = false;
+	bool middlereleased = false;
 
 	bool left_active = false;
 	bool middle_active = false;
@@ -211,6 +214,7 @@ public:
 	virtual bool getLeftState() = 0;
 	virtual bool getRightState() = 0;
 
+	virtual bool getMiddleClicked() = 0;
 	virtual bool getLeftClicked() = 0;
 	virtual bool getRightClicked() = 0;
 	virtual void resetLeftClicked() = 0;
@@ -283,13 +287,17 @@ public:
 	virtual bool getLeftState() { return m_receiver->left_active; }
 	virtual bool getRightState() { return m_receiver->right_active; }
 
+	virtual bool getMiddleClicked() { return m_receiver->middleclicked; }
 	virtual bool getLeftClicked() { return m_receiver->leftclicked; }
 	virtual bool getRightClicked() { return m_receiver->rightclicked; }
+	virtual void resetMiddleClicked() { m_receiver->middleclicked = false; }
 	virtual void resetLeftClicked() { m_receiver->leftclicked = false; }
 	virtual void resetRightClicked() { m_receiver->rightclicked = false; }
 
+	virtual bool getMiddleReleased() { return m_receiver->middlereleased; }
 	virtual bool getLeftReleased() { return m_receiver->leftreleased; }
 	virtual bool getRightReleased() { return m_receiver->rightreleased; }
+	virtual void resetMiddleReleased() { m_receiver->middlereleased = false; }
 	virtual void resetLeftReleased() { m_receiver->leftreleased = false; }
 	virtual void resetRightReleased() { m_receiver->rightreleased = false; }
 
@@ -321,13 +329,17 @@ public:
 	virtual bool getLeftState() { return leftdown; }
 	virtual bool getRightState() { return rightdown; }
 
+	virtual bool getMiddleClicked() { return middleclicked; }
 	virtual bool getLeftClicked() { return leftclicked; }
 	virtual bool getRightClicked() { return rightclicked; }
 	virtual void resetLeftClicked() { leftclicked = false; }
 	virtual void resetRightClicked() { rightclicked = false; }
+	virtual void resetMiddleClicked() { middleclicked = false; }
 
+	virtual bool getMiddleReleased() { return middlereleased; }
 	virtual bool getLeftReleased() { return leftreleased; }
 	virtual bool getRightReleased() { return rightreleased; }
+	virtual void resetMiddleReleased() { middlereleased = false; }
 	virtual void resetLeftReleased() { leftreleased = false; }
 	virtual void resetRightReleased() { rightreleased = false; }
 
@@ -413,6 +425,8 @@ private:
 	bool rightdown = false;
 	bool leftclicked = false;
 	bool rightclicked = false;
+	bool middleclicked = false;
 	bool leftreleased = false;
 	bool rightreleased = false;
+	bool middlereleased = false;
 };
