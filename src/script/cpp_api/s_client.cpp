@@ -208,7 +208,7 @@ bool ScriptApiClient::on_placenode(const PointedThing &pointed, const ItemDefini
 	return lua_toboolean(L, -1);
 }
 
-bool ScriptApiClient::on_raw_input(KeyList keys, bool lmb, bool rmb, s32 wheel)
+bool ScriptApiClient::on_raw_input(KeyList keys, bool lmb, bool rmb, bool mmb, s32 wheel)
 {
 	SCRIPTAPI_PRECHECKHEADER
 
@@ -228,6 +228,11 @@ bool ScriptApiClient::on_raw_input(KeyList keys, bool lmb, bool rmb, s32 wheel)
     if(rmb)
     {
         lua_pushstring(L, "rmb");
+		lua_rawseti(L, -2, i++);
+    }
+    if(mmb)
+    {
+        lua_pushstring(L, "mmb");
 		lua_rawseti(L, -2, i++);
     }
     if(wheel != 0)

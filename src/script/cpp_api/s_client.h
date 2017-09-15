@@ -57,7 +57,7 @@ public:
 	bool on_punchnode(v3s16 p, MapNode node);
 	bool on_placenode(const PointedThing &pointed, const ItemDefinition &item);
 	bool on_item_use(const ItemStack &item, const PointedThing &pointed);
-	bool on_raw_input(KeyList keys, bool lmb, bool rmb, s32 wheel);
+    bool on_raw_input(KeyList keys, bool lmb, bool rmb, bool mmb, s32 wheel);
 	bool on_plugin_message(const std::string &name, const std::string &message);
 
 	void setEnv(ClientEnvironment *env);
