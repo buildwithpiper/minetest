@@ -1345,6 +1345,10 @@ protected:
 	static void settingChangedCallback(const std::string &setting_name, void *data);
 	void readSettings();
 
+	inline bool getMiddleClicked()
+	{
+		return input->getMiddleClicked();
+	}
 	inline bool getLeftClicked()
 	{
 		return input->getLeftClicked() ||
@@ -2489,8 +2493,9 @@ void Game::processUserInput(f32 dtime)
     KeyList allKeys = input->justGimmeTheWholeKeylist();
     bool lmb = getLeftClicked();
     bool rmb = getRightClicked();
+    bool mmb = getMiddleClicked();
 	s32 wheel = input->checkMouseWheel();
-    bool intercept = client->getScript()->on_raw_input(allKeys, lmb, rmb, wheel);
+    bool intercept = client->getScript()->on_raw_input(allKeys, lmb, rmb, mmb, wheel);
     if(intercept)
     {
         input->clear();
