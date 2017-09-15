@@ -1426,13 +1426,9 @@ void Client::handleCommand_ModChannelSignal(NetworkPacket *pkt)
 
 void Client::handleCommand_PluginMessage(NetworkPacket *pkt)
 {
-	errorstream << "Decodig plugin message..." << std::endl;
 	std::string name;
 	std::string data;
 	*pkt >> name;
-	errorstream << "Got name " << name << std::endl;
-	//std::string data = pkt->readLongString();
 	*pkt >> data;
-	errorstream << "Client: Got Plugin Message for " << name << " with data [" << data << "]" << std::endl;
 	m_script->on_plugin_message(name,data);
 }
