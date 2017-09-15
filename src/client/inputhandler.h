@@ -177,6 +177,7 @@ public:
 
 		leftclicked = false;
 		rightclicked = false;
+		middleclicked = false;
 		leftreleased = false;
 		rightreleased = false;
 
@@ -196,8 +197,10 @@ public:
 
 	bool leftclicked = false;
 	bool rightclicked = false;
+	bool middleclicked = false;
 	bool leftreleased = false;
 	bool rightreleased = false;
+	bool middlereleased = false;
 
 	bool left_active = false;
 	bool middle_active = false;
@@ -248,6 +251,7 @@ public:
 	virtual bool getLeftState() = 0;
 	virtual bool getRightState() = 0;
 
+	virtual bool getMiddleClicked() = 0;
 	virtual bool getLeftClicked() = 0;
 	virtual bool getRightClicked() = 0;
 	virtual void resetLeftClicked() = 0;
@@ -353,6 +357,7 @@ public:
 		joystick.clearWasKeyDown(KeyType::MOUSE_R);
 	}
 
+<<<<<<< HEAD
 	virtual bool getLeftReleased()
 	{
 		return m_receiver->leftreleased ||
@@ -374,6 +379,11 @@ public:
 		m_receiver->rightreleased = false;
 		joystick.clearWasKeyReleased(KeyType::MOUSE_R);
 	}
+
+	virtual bool getMiddleClicked() { return m_receiver->middleclicked; }
+	virtual void resetMiddleClicked() { m_receiver->middleclicked = false; }
+	virtual bool getMiddleReleased() { return m_receiver->middlereleased; }
+	virtual void resetMiddleReleased() { m_receiver->middlereleased = false; }
 
 	virtual s32 checkMouseWheel() { return m_receiver->checkMouseWheel(); }
 	virtual s32 getMouseWheel() { return m_receiver->getMouseWheel(); }
@@ -404,13 +414,17 @@ public:
 	virtual bool getLeftState() { return leftdown; }
 	virtual bool getRightState() { return rightdown; }
 
+	virtual bool getMiddleClicked() { return middleclicked; }
 	virtual bool getLeftClicked() { return leftclicked; }
 	virtual bool getRightClicked() { return rightclicked; }
 	virtual void resetLeftClicked() { leftclicked = false; }
 	virtual void resetRightClicked() { rightclicked = false; }
+	virtual void resetMiddleClicked() { middleclicked = false; }
 
+	virtual bool getMiddleReleased() { return middlereleased; }
 	virtual bool getLeftReleased() { return leftreleased; }
 	virtual bool getRightReleased() { return rightreleased; }
+	virtual void resetMiddleReleased() { middlereleased = false; }
 	virtual void resetLeftReleased() { leftreleased = false; }
 	virtual void resetRightReleased() { rightreleased = false; }
 
@@ -429,6 +443,8 @@ private:
 	bool rightdown = false;
 	bool leftclicked = false;
 	bool rightclicked = false;
+	bool middleclicked = false;
 	bool leftreleased = false;
 	bool rightreleased = false;
+	bool middlereleased = false;
 };

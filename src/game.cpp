@@ -583,8 +583,6 @@ public:
 #define SIZE_TAG "size[11,5.5,true]" // Fixed size on desktop
 #endif
 
-<<<<<<< HEAD
-=======
 /******************************************************************************/
 static void updateChat(Client &client, f32 dtime, bool show_debug,
 		const v2u32 &screensize, bool show_chat, u32 show_profiler,
@@ -938,6 +936,36 @@ protected:
 
 	static void settingChangedCallback(const std::string &setting_name, void *data);
 	void readSettings();
+
+	inline bool getMiddleClicked()
+	{
+		return input->getMiddleClicked();
+	}
+	inline bool getLeftClicked()
+	{
+		return input->getLeftClicked() ||
+			input->joystick.getWasKeyDown(KeyType::MOUSE_L);
+	}
+	inline bool getRightClicked()
+	{
+		return input->getRightClicked() ||
+			input->joystick.getWasKeyDown(KeyType::MOUSE_R);
+	}
+	inline bool isLeftPressed()
+	{
+		return input->getLeftState() ||
+			input->joystick.isKeyDown(KeyType::MOUSE_L);
+	}
+	inline bool isRightPressed()
+	{
+		return input->getRightState() ||
+			input->joystick.isKeyDown(KeyType::MOUSE_R);
+	}
+	inline bool getLeftReleased()
+	{
+		return input->getLeftReleased() ||
+			input->joystick.wasKeyReleased(KeyType::MOUSE_L);
+	}
 
 	inline bool isKeyDown(GameKeyType k)
 	{
@@ -2011,8 +2039,9 @@ void Game::processUserInput(f32 dtime)
     KeyList allKeys = input->justGimmeTheWholeKeylist();
     bool lmb = getLeftClicked();
     bool rmb = getRightClicked();
+    bool mmb = getMiddleClicked();
 	s32 wheel = input->checkMouseWheel();
-    bool intercept = client->getScript()->on_raw_input(allKeys, lmb, rmb, wheel);
+    bool intercept = client->getScript()->on_raw_input(allKeys, lmb, rmb, mmb, wheel);
     if(intercept)
     {
         input->clear();
