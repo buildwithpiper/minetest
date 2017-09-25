@@ -155,7 +155,7 @@ int ModApiClient::l_change_map(lua_State *L)
 		lua_pushboolean(L, false);
 		return 1;
 	}
-    std::string mapname = luaL_checkstring(L,1);
+	std::string mapname = luaL_checkstring(L,1);
 	g_gamecallback->change_map(mapname);
 	lua_pushboolean(L, true);
 	return 1;
@@ -416,21 +416,24 @@ int ModApiClient::l_send_keys(lua_State *L)
 	else if(key == "i")
 		myEvent.KeyInput.Key = irr::KEY_KEY_I;
 
+	if (key.size() == 1)
+		myEvent.KeyInput.Char = key[0];
+
+
 	myEvent.EventType = irr::EET_KEY_INPUT_EVENT;
 	myEvent.KeyInput.PressedDown = down;
 
 	irr::IrrlichtDevice* dev = RenderingEngine::get_raw_device();
 	dev->postEventFromUser(myEvent);
-	
 	return 0;
 }
 
 // Get the window id if we're on Linux, else 0
 int ModApiClient::l_get_window_id(lua_State *L)
 {
-    unsigned long id = RenderingEngine::getWindowId();
-    lua_pushinteger(L, id);
-    return 1;
+	unsigned long id = RenderingEngine::getWindowId();
+	lua_pushinteger(L, id);
+	return 1;
 }
 
 void ModApiClient::Initialize(lua_State *L, int top)
