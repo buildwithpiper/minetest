@@ -397,32 +397,32 @@ int ModApiClient::l_send_keys(lua_State *L)
 	std::string key = luaL_checkstring(L, 1);
 	bool down = lua_toboolean(L,2);
 
-	errorstream << key << std::endl;
+    irr::SEvent myEvent;
 
-	irr::SEvent myEvent;
-
-	if (key == "space")
-		myEvent.KeyInput.Key = irr::KEY_SPACE;
-	else if (key == "escape")
-		myEvent.KeyInput.Key = irr::KEY_ESCAPE;
-	else if (key == "a")
-		myEvent.KeyInput.Key = irr::KEY_KEY_A;
-	else if (key == "d")
-		myEvent.KeyInput.Key = irr::KEY_KEY_D;
-	else if (key == "s")
-		myEvent.KeyInput.Key = irr::KEY_KEY_S;
-	else if (key == "w")
-		myEvent.KeyInput.Key = irr::KEY_KEY_W;
+    if(key == "space")
+            myEvent.KeyInput.Key = irr::KEY_SPACE;
+    else if(key == "escape")
+            myEvent.KeyInput.Key = irr::KEY_ESCAPE;
+    else if(key == "a")
+            myEvent.KeyInput.Key = irr::KEY_KEY_A;
+    else if(key == "d")
+            myEvent.KeyInput.Key = irr::KEY_KEY_D;
+    else if(key == "s")
+            myEvent.KeyInput.Key = irr::KEY_KEY_S;
+    else if(key == "w")
+            myEvent.KeyInput.Key = irr::KEY_KEY_W;
+    else if(key == "i")
+            myEvent.KeyInput.Key = irr::KEY_KEY_I;
 
 	if (key.size() == 1)
 		myEvent.KeyInput.Char = key[0];
 
-	myEvent.EventType = irr::EET_KEY_INPUT_EVENT;
-	myEvent.KeyInput.PressedDown = down;
+    myEvent.EventType = irr::EET_KEY_INPUT_EVENT;
+    myEvent.KeyInput.PressedDown = down;
 
-	irr::IrrlichtDevice* dev = RenderingEngine::get_raw_device();
-	dev->postEventFromUser(myEvent);
-
+    irr::IrrlichtDevice* dev = RenderingEngine::get_raw_device();
+    dev->postEventFromUser(myEvent);
+    
 	return 0;
 }
 
