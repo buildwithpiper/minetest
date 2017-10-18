@@ -4228,6 +4228,13 @@ void Game::handleDigging(const PointedThing &pointed, const v3s16 &nodepos,
 void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 		const CameraOrientation &cam)
 {
+	
+		using namespace std::chrono;
+	// ==========
+	int frameEntirety = system_clock::now().time_since_epoch().count();
+
+	// ==========
+	int a1 = system_clock::now().time_since_epoch().count();
 	LocalPlayer *player = client->getEnv().getLocalPlayer();
 
 	/*
@@ -4285,6 +4292,9 @@ void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 			sunlight_seen, camera->getCameraMode(), player->getYaw(),
 			player->getPitch());
 
+	a1 = system_clock::now().time_since_epoch().count() - a1;
+	// ==========
+	int a2 = system_clock::now().time_since_epoch().count();
 	/*
 		Update clouds
 	*/
@@ -4317,15 +4327,24 @@ void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 		}
 	}
 
+	a2 = system_clock::now().time_since_epoch().count() - a2;
+	// ==========
+	int a3 = system_clock::now().time_since_epoch().count();
 	/*
 		Update particles
 	*/
 	client->getParticleManager()->step(dtime);
 
+	a3 = system_clock::now().time_since_epoch().count() - a3;
+	// ==========
+	int a4 = system_clock::now().time_since_epoch().count();
 	/*
 		Fog
 	*/
 
+	a4 = system_clock::now().time_since_epoch().count() - a4;
+	// ==========
+	int a5 = system_clock::now().time_since_epoch().count();
 	if (m_cache_enable_fog && !flags.force_fog_off) {
 		driver->setFog(
 				sky->getBgColor(),
@@ -4348,6 +4367,9 @@ void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 		);
 	}
 
+	a5 = system_clock::now().time_since_epoch().count() - a5;
+	// ==========
+	int a6 = system_clock::now().time_since_epoch().count();
 	/*
 		Get chat messages from client
 	*/
@@ -4358,6 +4380,9 @@ void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 			flags.show_chat, runData.profiler_current_page,
 			*chat_backend, guitext_chat);
 
+	a6 = system_clock::now().time_since_epoch().count() - a6;
+	// ==========
+	int a7 = system_clock::now().time_since_epoch().count();
 	/*
 		Inventory
 	*/
@@ -4389,6 +4414,9 @@ void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 		runData.update_wielded_item_trigger = false;
 	}
 
+	a7 = system_clock::now().time_since_epoch().count() - a7;
+	// ==========
+	int a8 = system_clock::now().time_since_epoch().count();
 	/*
 		Update block draw list every 200ms or when camera direction has
 		changed much
@@ -4404,8 +4432,14 @@ void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 		runData.update_draw_list_last_cam_dir = camera_direction;
 	}
 
+	a8 = system_clock::now().time_since_epoch().count() - a8;
+	// ==========
+	int a9 = system_clock::now().time_since_epoch().count();
 	updateGui(*stats, dtime, cam);
 
+	a9 = system_clock::now().time_since_epoch().count() - a9;
+	// ==========
+	int a10 = system_clock::now().time_since_epoch().count();
 	/*
 	   make sure menu is on top
 	   1. Delete formspec menu reference if menu was removed
@@ -4420,6 +4454,9 @@ void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 		}
 	}
 
+	a10 = system_clock::now().time_since_epoch().count() - a10;
+	// ==========
+	int a11 = system_clock::now().time_since_epoch().count();
 	/*
 		Drawing begins
 	*/
@@ -4475,6 +4512,22 @@ void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 
 	stats->drawtime = tt_draw.stop(true);
 	g_profiler->graphAdd("mainloop_draw", stats->drawtime / 1000.0f);
+
+	a11 = system_clock::now().time_since_epoch().count() - a11;
+	frameEntirety = system_clock::now().time_since_epoch().count() - frameEntirety;
+
+	g_profiler->avg("!!Game: 1 Total", frameEntirety / 1000000);
+	g_profiler->avg("!!Game: 1 Part A", a1 / 1000000);
+	g_profiler->avg("!!Game: 2 Part B", a2 / 1000000);
+	g_profiler->avg("!!Game: 3 Part C", a3 / 1000000);
+	g_profiler->avg("!!Game: 4 Part D", a4 / 1000000);
+	g_profiler->avg("!!Game: 5 Part E", a5 / 1000000);
+	g_profiler->avg("!!Game: 6 Part F", a6 / 1000000);
+	g_profiler->avg("!!Game: 7 Part G", a7 / 1000000);
+	g_profiler->avg("!!Game: 8 Part H", a8 / 1000000);
+	g_profiler->avg("!!Game: 9 Part I", a9 / 1000000);
+	g_profiler->avg("!!Game: 10 Part J", a10 / 1000000);
+	g_profiler->avg("!!Game: 11 Part K", a11 / 1000000);
 }
 
 
