@@ -67,6 +67,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "version.h"
 #include "script/scripting_client.h"
 
+#include <chrono>
+
 #if USE_SOUND
 	#include "sound_openal.h"
 #endif
@@ -1709,6 +1711,10 @@ void Game::run()
 			&& !(*kill || g_gamecallback->shutdown_requested
 			|| (server && server->getShutdownRequested()))) {
 
+		// Work here:
+		using namespace std::chrono;
+		int entireLoop = system_clock::now().time_since_epoch().count();
+		int sect1 = system_clock::now().time_since_epoch().count();
 		const irr::core::dimension2d<u32> &current_screen_size =
 			RenderingEngine::get_video_driver()->getScreenSize();
 		// Verify if window size has changed and save it if it's the case
@@ -1729,7 +1735,8 @@ void Game::run()
 
 		updateStats(&stats, draw_times, dtime);
 		updateInteractTimers(dtime);
-
+		sect1 = system_clock::now().time_since_epoch().count() - sect1;
+		int sect2 = system_clock::now().time_since_epoch().count();
 		if (!checkConnection())
 			break;
 		if (!handleCallbacks())
@@ -1749,12 +1756,30 @@ void Game::run()
 		cam_view.camera_pitch += (cam_view_target.camera_pitch -
 				cam_view.camera_pitch) * m_cache_cam_smoothing;
 		updatePlayerControl(cam_view);
+		sect2 = system_clock::now().time_since_epoch().count() - sect2;
+		int sect3 = system_clock::now().time_since_epoch().count();
 		step(&dtime);
+		sect3 = system_clock::now().time_since_epoch().count() - sect3;
+		int sect4 = system_clock::now().time_since_epoch().count();
 		processClientEvents(&cam_view_target);
 		updateCamera(draw_times.busy_time, dtime);
+		sect4 = system_clock::now().time_since_epoch().count() - sect4;
+		int sect5 = system_clock::now().time_since_epoch().count();
 		updateSound(dtime);
 		processPlayerInteraction(dtime, flags.show_hud, flags.show_debug);
+		sect5 = system_clock::now().time_since_epoch().count() - sect5;
+		int sect6 = system_clock::now().time_since_epoch().count();
 		updateFrame(&graph, &stats, dtime, cam_view);
+		sect6 = system_clock::now().time_since_epoch().count() - sect6;
+
+		entireLoop = system_clock::now().time_since_epoch().count() - entireLoop;
+		g_profiler->avg("Game: All Steps", entireLoop / 1000000);
+		g_profiler->avg("Game: 1 Part A", sect1 / 1000000);
+		g_profiler->avg("Game: 2 Part B", sect2 / 1000000);
+		g_profiler->avg("Game: 3 Part C", sect3 / 1000000);
+		g_profiler->avg("Game: 4 Part D", sect4 / 1000000);
+		g_profiler->avg("Game: 5 Part E", sect5 / 1000000);
+		g_profiler->avg("Game: 6 Part F", sect6 / 1000000);
 		updateProfilerGraphs(&graph);
 
 		// Update if minimap has been disabled by the server
@@ -2441,12 +2466,12 @@ void Game::updateProfilers(const RunStats &stats, const FpsControl &draw_times, 
 void Game::addProfilerGraphs(const RunStats &stats,
 		const FpsControl &draw_times, f32 dtime)
 {
-	g_profiler->graphAdd("mainloop_other",
-			draw_times.busy_time / 1000.0f - stats.drawtime / 1000.0f);
+	//g_profiler->graphAdd("mainloop_other",
+	//		draw_times.busy_time / 1000.0f - stats.drawtime / 1000.0f);
 
-	if (draw_times.sleep_time != 0)
-		g_profiler->graphAdd("mainloop_sleep", draw_times.sleep_time / 1000.0f);
-	g_profiler->graphAdd("mainloop_dtime", dtime);
+	//if (draw_times.sleep_time != 0)
+		//g_profiler->graphAdd("mainloop_sleep", draw_times.sleep_time / 1000.0f);
+	//g_profiler->graphAdd("mainloop_dtime", dtime);
 
 	g_profiler->add("Elapsed time", dtime);
 	g_profiler->avg("FPS", 1. / dtime);

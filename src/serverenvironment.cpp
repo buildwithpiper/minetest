@@ -44,6 +44,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "database-postgresql.h"
 #endif
 #include <algorithm>
+#include <chrono>
 
 #define LBM_NAME_ALLOWED_CHARS "abcdefghijklmnopqrstuvwxyz0123456789_:"
 
@@ -1104,6 +1105,8 @@ void ServerEnvironment::clearObjects(ClearObjectsMode mode)
 
 void ServerEnvironment::step(float dtime)
 {
+	using namespace std::chrono;
+	int envStart = system_clock::now().time_since_epoch().count();
 	/* Step time of day */
 	stepTimeOfDay(dtime);
 
@@ -1142,6 +1145,8 @@ void ServerEnvironment::step(float dtime)
 	/*
 		Manage active block list
 	*/
+	int a5 = system_clock::now().time_since_epoch().count();
+	m_script->environment_Step(dtime);
 	if (m_active_blocks_management_interval.step(dtime, m_cache_active_block_mgmt_interval)) {
 		ScopeProfiler sp(g_profiler, "SEnv: manage act. block list avg per interval", SPT_AVG);
 		/*
@@ -1201,9 +1206,13 @@ void ServerEnvironment::step(float dtime)
 		}
 	}
 
+	a5 = system_clock::now().time_since_epoch().count() - a5;
+	g_profiler->add("Biper - 1. Blocks? (piece) (ms): ", a5 / 100000);
+
 	/*
 		Mess around in active blocks
 	*/
+	int a4 = system_clock::now().time_since_epoch().count();
 	if (m_active_blocks_nodemetadata_interval.step(dtime, m_cache_nodetimer_interval)) {
 		ScopeProfiler sp(g_profiler, "SEnv: mess in act. blocks avg per interval", SPT_AVG);
 
@@ -1241,7 +1250,10 @@ void ServerEnvironment::step(float dtime)
 			}
 		}
 	}
+	a4 = system_clock::now().time_since_epoch().count() - a4;
+	g_profiler->add("Biper - 2. Blocks2? Step (piece) (ms): ", a4 / 100000);
 
+	int a3 = system_clock::now().time_since_epoch().count();
 	if (m_active_block_modifier_interval.step(dtime, m_cache_abm_interval))
 		do { // breakable
 			if (m_active_block_interval_overload_skip > 0) {
@@ -1276,12 +1288,22 @@ void ServerEnvironment::step(float dtime)
 				m_active_block_interval_overload_skip = (time_ms / max_time_ms) + 1;
 			}
 		}while(0);
-
+	a3 = system_clock::now().time_since_epoch().count() - a3;
+	g_profiler->add("Biper - 3. Block? Step (piece) (ms): ", a3 / 100000);
 	/*
 		Step script environment (run global on_step())
 	*/
-	m_script->environment_Step(dtime);
 
+	int a2 = system_clock::now().time_since_epoch().count();
+	m_script->environment_Step(dtime);
+	a2 = system_clock::now().time_since_epoch().count() - a2;
+	g_profiler->add("Biper - 4. Enviro Step (piece) (ms): ", a2 / 100000);
+	/*
+	warningstream
+		<< "Stepping environment: "
+		<< a2
+		<< std::endl;
+	*/
 	/*
 		Step active objects
 	*/
@@ -1289,7 +1311,7 @@ void ServerEnvironment::step(float dtime)
 		ScopeProfiler sp(g_profiler, "SEnv: step act. objs avg", SPT_AVG);
 		//TimeTaker timer("Step active objects");
 
-		g_profiler->avg("SEnv: num of objects", m_active_objects.size());
+		g_profiler->add("SEnv: num of objects", m_active_objects.size());
 
 		// This helps the objects to send data at the same time
 		bool send_recommended = false;
@@ -1299,14 +1321,18 @@ void ServerEnvironment::step(float dtime)
 			m_send_recommended_timer -= getSendRecommendedInterval();
 			send_recommended = true;
 		}
-
+		int tCount = 0;
 		for (auto &ao_it : m_active_objects) {
 			ServerActiveObject* obj = ao_it.second;
 			// Don't step if is to be removed or stored statically
 			if(obj->m_removed || obj->m_pending_deactivation)
 				continue;
 			// Step object
+			int a = system_clock::now().time_since_epoch().count();
 			obj->step(dtime, send_recommended);
+			a = system_clock::now().time_since_epoch().count() - a;
+			// Work here:
+			tCount += a;
 			// Read messages from object
 			while(!obj->m_messages_out.empty())
 			{
@@ -1315,6 +1341,7 @@ void ServerEnvironment::step(float dtime)
 				obj->m_messages_out.pop();
 			}
 		}
+		g_profiler->add("Biper - 5. Entity Step (piece) (ms): ", tCount / 100000);
 	}
 
 	/*
@@ -1347,6 +1374,8 @@ void ServerEnvironment::step(float dtime)
 				++i;
 		}
 	}
+	envStart = system_clock::now().time_since_epoch().count() - envStart;
+	g_profiler->add("Biper - Server Step (total) (ms): ", envStart / 100000);
 }
 
 u32 ServerEnvironment::addParticleSpawner(float exptime)
