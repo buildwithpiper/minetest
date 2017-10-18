@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "cpp_api/s_server.h"
 #include "cpp_api/s_internal.h"
+#include "cpp_api/s_item.h"
 #include "common/c_converter.h"
 
 bool ScriptApiServer::getAuth(const std::string &playername,
@@ -183,5 +184,20 @@ void ScriptApiServer::on_shutdown()
 	lua_getfield(L, -1, "registered_on_shutdown");
 	// Call callbacks
 	runCallbacks(0, RUN_CALLBACKS_MODE_FIRST);
+}
+
+void ScriptApiServer::on_interactnodes(v3s16 p, ServerActiveObject *puncher)
+{
+	SCRIPTAPI_PRECHECKHEADER
+
+	// Get core.registered_on_chat_messages
+	lua_getglobal(L, "core");
+	lua_getfield(L, -1, "registered_on_interactnodes");
+
+	// Call function
+	push_v3s16(L, p);
+	objectrefGetOrCreate(L, puncher);
+
+	runCallbacks(2, RUN_CALLBACKS_MODE_OR_SC);
 }
 

@@ -573,6 +573,7 @@ core.registered_on_mods_loaded, core.register_on_mods_loaded = make_registration
 core.registered_on_shutdown, core.register_on_shutdown = make_registration()
 core.registered_on_punchnodes, core.register_on_punchnode = make_registration()
 core.registered_on_placenodes, core.register_on_placenode = make_registration()
+core.registered_on_interactnodes, core.register_on_interactnodes = make_registration()
 core.registered_on_dignodes, core.register_on_dignode = make_registration()
 core.registered_on_generateds, core.register_on_generated = make_registration()
 core.registered_on_newplayers, core.register_on_newplayer = make_registration()
