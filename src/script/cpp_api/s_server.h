@@ -19,8 +19,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 
+#include "irr_v3d.h"
 #include "cpp_api/s_base.h"
 #include <set>
+#include "util/pointedthing.h"
 
 class ScriptApiServer
 		: virtual public ScriptApiBase
@@ -32,6 +34,8 @@ public:
 	bool on_plugin_message(const std::string &name, const std::string &plugin, const std::string &message);
 	// Calls on_shutdown handlers
 	void on_shutdown();
+
+	void on_interactnodes(v3s16 p, ServerActiveObject *puncher);
 
 	/* auth */
 	bool getAuth(const std::string &playername,
