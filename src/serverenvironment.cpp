@@ -1207,7 +1207,7 @@ void ServerEnvironment::step(float dtime)
 	}
 
 	a5 = system_clock::now().time_since_epoch().count() - a5;
-	g_profiler->avg("Biper - 1. Blocks? (piece) (ms): ", a5 / 100000);
+	g_profiler->avg("Biper - 1. Blocks? (piece) (ms): ", a5 / 1000000);
 
 	/*
 		Mess around in active blocks
@@ -1251,7 +1251,7 @@ void ServerEnvironment::step(float dtime)
 		}
 	}
 	a4 = system_clock::now().time_since_epoch().count() - a4;
-	g_profiler->avg("Biper - 2. Blocks2? Step (piece) (ms): ", a4 / 100000);
+	g_profiler->avg("Biper - 2. Blocks2? Step (piece) (ms): ", a4 / 1000000);
 
 	int a3 = system_clock::now().time_since_epoch().count();
 	if (m_active_block_modifier_interval.step(dtime, m_cache_abm_interval))
@@ -1289,7 +1289,7 @@ void ServerEnvironment::step(float dtime)
 			}
 		}while(0);
 	a3 = system_clock::now().time_since_epoch().count() - a3;
-	g_profiler->avg("Biper - 3. Block? Step (piece) (ms): ", a3 / 100000);
+	g_profiler->avg("Biper - 3. Block? Step (piece) (ms): ", a3 / 1000000);
 	/*
 		Step script environment (run global on_step())
 	*/
@@ -1297,7 +1297,7 @@ void ServerEnvironment::step(float dtime)
 	int a2 = system_clock::now().time_since_epoch().count();
 	m_script->environment_Step(dtime);
 	a2 = system_clock::now().time_since_epoch().count() - a2;
-	g_profiler->avg("Biper - 4. Enviro Step (piece) (ms): ", a2 / 100000);
+	g_profiler->avg("Biper - 4. Enviro Step (piece) (ms): ", a2 / 1000000);
 	/*
 	warningstream
 		<< "Stepping environment: "
@@ -1341,7 +1341,7 @@ void ServerEnvironment::step(float dtime)
 				obj->m_messages_out.pop();
 			}
 		}
-		g_profiler->avg("Biper - 5. Entity Step (piece) (ms): ", tCount / 100000);
+		g_profiler->avg("Biper - 5. Entity Step (piece) (ms): ", tCount / 1000000);
 	}
 
 	/*
@@ -1375,7 +1375,7 @@ void ServerEnvironment::step(float dtime)
 		}
 	}
 	envStart = system_clock::now().time_since_epoch().count() - envStart;
-	g_profiler->avg("Biper - Server Step (total) (ms): ", envStart / 100000);
+	g_profiler->avg("Biper - Server Step (total) (ms): ", envStart / 1000000);
 }
 
 u32 ServerEnvironment::addParticleSpawner(float exptime)
