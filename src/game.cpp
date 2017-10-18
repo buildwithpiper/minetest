@@ -1773,13 +1773,13 @@ void Game::run()
 		sect6 = system_clock::now().time_since_epoch().count() - sect6;
 
 		entireLoop = system_clock::now().time_since_epoch().count() - entireLoop;
-		g_profiler->avg("Game: All Steps", entireLoop / 1000000);
-		g_profiler->avg("Game: 1 Part A", sect1 / 1000000);
-		g_profiler->avg("Game: 2 Part B", sect2 / 1000000);
-		g_profiler->avg("Game: 3 Part C", sect3 / 1000000);
-		g_profiler->avg("Game: 4 Part D", sect4 / 1000000);
-		g_profiler->avg("Game: 5 Part E", sect5 / 1000000);
-		g_profiler->avg("Game: 6 Part F", sect6 / 1000000);
+		g_profiler->avg("!Game: All Steps", entireLoop / 1000000);
+		g_profiler->avg("!Game: 1 Part A", sect1 / 1000000);
+		g_profiler->avg("!Game: 2 Part B", sect2 / 1000000);
+		g_profiler->avg("!Game: 3 Part C", sect3 / 1000000);
+		g_profiler->avg("!Game: 4 Part D", sect4 / 1000000);
+		g_profiler->avg("!Game: 5 Part E", sect5 / 1000000);
+		g_profiler->avg("!Game: 6 Part F", sect6 / 1000000);
 		updateProfilerGraphs(&graph);
 
 		// Update if minimap has been disabled by the server
