@@ -1101,6 +1101,7 @@ void Server::handleCommand_Interact(NetworkPacket* pkt)
 	RollbackScopeActor rollback_scope(m_rollback,
 			std::string("player:")+player->getName());
 
+
 	/*
 		0: start digging or punch object
 	*/
@@ -1322,6 +1323,8 @@ void Server::handleCommand_Interact(NetworkPacket* pkt)
 				client->ResendBlockIfOnWire(blockpos2);
 			}
 		}
+
+		m_script->on_interactnodes(p_under, playersao);
 	} // action == 3
 
 	/*
