@@ -40,6 +40,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define WIELDMESH_OFFSET_X 55.0f
 #define WIELDMESH_OFFSET_Y -35.0f
 
+static void camera_viewing_range_changed(const std::string &settingname, void *data)
+{
+	((Camera *) data)->updateViewingRange();
+}
+
 Camera::Camera(MapDrawControl &draw_control, Client *client):
 	m_draw_control(draw_control),
 	m_client(client)
@@ -74,11 +79,16 @@ Camera::Camera(MapDrawControl &draw_control, Client *client):
 	m_cache_fov                 = g_settings->getFloat("fov");
 	m_arm_inertia               = g_settings->getBool("arm_inertia");
 	m_nametags.clear();
+
+	g_settings->registerChangedCallback("viewing_range",
+		&camera_viewing_range_changed, this);
 }
 
 Camera::~Camera()
 {
 	m_wieldmgr->drop();
+	g_settings->deregisterChangedCallback("viewing_range",
+		&camera_viewing_range_changed, this);
 }
 
 bool Camera::successfullyCreated(std::string &error_message)
