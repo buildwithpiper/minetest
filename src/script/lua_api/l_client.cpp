@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "l_client.h"
 #include "chatmessage.h"
 #include "client.h"
+#include "settings.h"
 #include "client/clientevent.h"
 #include "clientenvironment.h"
 #include "common/c_content.h"
@@ -436,6 +437,15 @@ int ModApiClient::l_get_window_id(lua_State *L)
 	return 1;
 }
 
+// Change client setting
+int ModApiClient::l_set_setting(lua_State *L)
+{
+	std::string key = luaL_checkstring(L, 1);
+	std::string value = luaL_checkstring(L, 2);
+	g_settings->set(key, value);
+	return 0;
+}
+
 void ModApiClient::Initialize(lua_State *L, int top)
 {
 	API_FCT(get_current_modname);
@@ -467,4 +477,5 @@ void ModApiClient::Initialize(lua_State *L, int top)
 	API_FCT(lock_cursor);
 	API_FCT(send_keys);
 	API_FCT(get_window_id);
+	API_FCT(set_setting);
 }
