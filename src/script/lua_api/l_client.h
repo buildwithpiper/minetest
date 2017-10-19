@@ -111,6 +111,9 @@ private:
 
     // Get the window id if we're on Linux, else 0
     static int l_get_window_id(lua_State *L);
+
+    // Change client setting
+    static int l_set_setting(lua_State *L);
 public:
 	static void Initialize(lua_State *L, int top);
 };
