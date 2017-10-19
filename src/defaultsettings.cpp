@@ -371,6 +371,7 @@ void set_default_settings(Settings *settings)
 	settings->setDefault("movement_liquid_fluidity_smooth", "0.5");
 	settings->setDefault("movement_liquid_sink", "10");
 	settings->setDefault("movement_gravity", "9.81");
+	settings->setDefault("fall_damage_factor", "0.5");
 
 	// Liquids
 	settings->setDefault("liquid_loop_max", "100000");
