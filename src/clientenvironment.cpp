@@ -221,7 +221,7 @@ void ClientEnvironment::step(float dtime)
 		speed_diff.Z = 0;
 		f32 pre_factor = 1; // 1 hp per node/s
 		f32 tolerance = BS*14; // 5 without damage
-		f32 post_factor = 1; // 1 hp per node/s
+		f32 post_factor = g_settings->getFloat("fall_damage_factor"); // 1 hp per node/s
 		if (info.type == COLLISION_NODE) {
 			const ContentFeatures &f = m_client->ndef()->
 				get(m_map->getNodeNoEx(info.node_p));
