@@ -55,6 +55,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "irrlicht_changes/static_text.h"
 #include "guiscalingfilter.h"
 #include "guiEditBoxWithScrollbar.h"
+#include "script/scripting_client.h"
+
+#if USE_FREETYPE && IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR < 9
 #include "intlGUIEditBox.h"
 
 #define MY_CHECKPOS(a,b)													\
