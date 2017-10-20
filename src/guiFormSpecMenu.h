@@ -28,12 +28,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "guiTable.h"
 #include "network/networkprotocol.h"
 #include "client/joystick_controller.h"
+#include "client/inputhandler.h"
 #include "util/string.h"
 #include "util/enriched_string.h"
 
 class InventoryManager;
 class ISimpleTextureSource;
 class Client;
+class ClientScripting;
 
 typedef enum {
 	f_Button,
