@@ -53,6 +53,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "util/string.h" // for parseColorString()
 #include "irrlicht_changes/static_text.h"
 #include "guiscalingfilter.h"
+#include "script/scripting_client.h"
 
 #if USE_FREETYPE && IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR < 9
 #include "intlGUIEditBox.h"
@@ -3401,12 +3402,16 @@ bool GUIFormSpecMenu::OnEvent(const SEvent& event)
 		// up/down: 0 = down (press), 1 = up (release), 2 = unknown event, -1 movement
 		int button = 0;
 		int updown = 2;
+		KeyList kl;
 		if (event.MouseInput.Event == EMIE_LMOUSE_PRESSED_DOWN)
 			{ button = 0; updown = 0; }
 		else if (event.MouseInput.Event == EMIE_RMOUSE_PRESSED_DOWN)
 			{ button = 1; updown = 0; }
 		else if (event.MouseInput.Event == EMIE_MMOUSE_PRESSED_DOWN)
-			{ button = 2; updown = 0; }
+			{ 
+				button = 2; updown = 0; 
+				m_client->getScript()->on_raw_input(kl, false, false, true, 0);
+			}
 		else if (event.MouseInput.Event == EMIE_LMOUSE_LEFT_UP)
 			{ button = 0; updown = 1; }
 		else if (event.MouseInput.Event == EMIE_RMOUSE_LEFT_UP)
