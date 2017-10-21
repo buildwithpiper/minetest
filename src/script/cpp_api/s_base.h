@@ -77,6 +77,7 @@ public:
 	// These throw a ModError on failure
 	void loadMod(const std::string &script_path, const std::string &mod_name);
 	void loadScript(const std::string &script_path);
+	void spawnEntity(lua_State *L, ServerActiveObject *cobj);
 
 #ifndef SERVER
 	void loadModFromMemory(const std::string &mod_name);
