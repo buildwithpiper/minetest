@@ -414,6 +414,8 @@ int ModApiClient::l_send_keys(lua_State *L)
             myEvent.KeyInput.Key = irr::KEY_KEY_W;
     else if(key == "i")
             myEvent.KeyInput.Key = irr::KEY_KEY_I;
+    else if(key == "z")
+            myEvent.KeyInput.Key = irr::KEY_KEY_Z;
 
 	if (key.size() == 1)
 		myEvent.KeyInput.Char = key[0];
