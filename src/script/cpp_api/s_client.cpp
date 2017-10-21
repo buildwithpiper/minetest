@@ -316,6 +316,17 @@ bool ScriptApiClient::on_plugin_message(const std::string &plugin, const std::st
 	return ate;
 }
 
+void ScriptApiClient::on_item_selected(const u16 newitem)
+{
+	SCRIPTAPI_PRECHECKHEADER
+
+	lua_getglobal(L, "core");
+	lua_getfield(L, -1, "registered_on_item_selected");
+	// Call callbacks
+	lua_pushinteger(L, newitem);
+	runCallbacks(1, RUN_CALLBACKS_MODE_OR_SC);
+}
+
 void ScriptApiClient::setEnv(ClientEnvironment *env)
 {
 	ScriptApiBase::setEnv(env);

@@ -60,6 +60,7 @@ public:
 	bool on_item_use(const ItemStack &item, const PointedThing &pointed);
     bool on_raw_input(KeyList keys, bool lmb, bool rmb, bool mmb, s32 wheel);
 	bool on_plugin_message(const std::string &name, const std::string &message);
+	void on_item_selected(const u16 newitem);
 
 	bool on_inventory_open(Inventory *inventory);
 
