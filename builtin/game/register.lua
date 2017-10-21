@@ -603,3 +603,6 @@ core.registered_on_plugin_message, core.register_on_plugin_message = make_regist
 --
 
 core.register_on_mapgen_init = function(func) func(core.get_mapgen_params()) end
+
+
+core.registered_on_spawnentity, core.register_on_spawnentity = make_registration()

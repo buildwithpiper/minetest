@@ -604,6 +604,7 @@ int ModApiEnvMod::l_add_entity(lua_State *L)
 		return 0;
 	// Return ObjectRef
 	getScriptApiBase(L)->objectrefGetOrCreate(L, obj);
+	getScriptApiBase(L)->spawnEntity(L, obj);
 	return 1;
 }
 

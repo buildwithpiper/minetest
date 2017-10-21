@@ -160,6 +160,15 @@ void ScriptApiBase::clientOpenLibs(lua_State *L)
 	}
 }
 
+void ScriptApiBase::spawnEntity(lua_State *L, ServerActiveObject *cobj) {
+
+	lua_getglobal(L, "core");
+	lua_getfield(L, -1, "registered_on_spawnentity");
+	objectrefGetOrCreate(L, cobj);
+	runCallbacks(1, RUN_CALLBACKS_MODE_OR);
+	lua_pop(L, 2); // 2 ?
+}
+
 void ScriptApiBase::loadMod(const std::string &script_path,
 		const std::string &mod_name)
 {
