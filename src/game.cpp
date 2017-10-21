@@ -2676,14 +2676,21 @@ void Game::processItemSelection(u16 *new_playeritem)
 
 	/* Item selection using hotbar slot keys
 	 */
+	bool changed = false;
 	for (u16 i = 0; i < 23; i++) {
 		if (wasKeyDown((GameKeyType) (KeyType::SLOT_1 + i))) {
 			if (i < PLAYER_INVENTORY_SIZE && i < player->hud_hotbar_itemcount) {
 				*new_playeritem = i;
 				infostream << "Selected item: " << new_playeritem << std::endl;
+				changed = true;
 			}
 			break;
 		}
+	}
+
+	if(dir != 0 || changed)
+	{
+		client->getScript()->on_item_selected(*new_playeritem);
 	}
 }
 
