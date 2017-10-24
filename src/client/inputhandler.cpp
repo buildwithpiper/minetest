@@ -176,8 +176,13 @@ bool MyEventReceiver::OnEvent(const SEvent &event)
 				LL_NONE,    // ELL_NONE
 		};
 		assert(event.LogEvent.Level < ARRLEN(irr_loglev_conv));
-		g_logger.log(irr_loglev_conv[event.LogEvent.Level],
-				std::string("Irrlicht: ") + event.LogEvent.Text);
+		std::string text(event.LogEvent.Text);
+		LogLevel level = irr_loglev_conv[event.LogEvent.Level];
+
+		if ( text.find("PNG warning: iCCP:") != std::string::npos )
+			level = LL_VERBOSE;
+
+		g_logger.log(level, std::string("Irrlicht: ") + text);
 		return true;
 	}
 	/* always return false in order to continue processing events */
