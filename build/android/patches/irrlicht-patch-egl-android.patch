@@ -1,0 +1,14 @@
+--- source/Irrlicht/CEGLManager.cpp     (revision 5145)
++++ source/Irrlicht/CEGLManager.cpp     (working copy)
+@@ -9,6 +9,10 @@
+ #include "irrString.h"
+ #include "os.h"
+
++#if defined(_IRR_COMPILE_WITH_ANDROID_DEVICE_)
++#include <android/native_activity.h>
++#endif
++
+ namespace irr
+ {
+ namespace video
+
