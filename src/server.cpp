@@ -3564,11 +3564,9 @@ void Server::sendPluginMessage(const char *name, const std::string &plugin, cons
 	if (!player) {
 		return;
 	}
-	errorstream<<"Got player!"<<std::endl;
 	if (player->getPeerId() == PEER_ID_INEXISTENT)
 		return;
 
-	errorstream<<"Got peer!"<<std::endl;
 	NetworkPacket pkt(TOCLIENT_PLUGIN_MESSAGE, 0, player->getPeerId());
 	pkt << plugin << data;
 
