@@ -52,6 +52,11 @@ local tabs = {}
 tabs.settings = dofile(menupath .. DIR_DELIM .. "tab_settings.lua")
 tabs.mods = dofile(menupath .. DIR_DELIM .. "tab_mods.lua")
 tabs.credits = dofile(menupath .. DIR_DELIM .. "tab_credits.lua")
+
+if not core.settings:get_bool("dev_mode") then 
+	tabs.piper = dofile(menupath .. DIR_DELIM .. "tab_piper.lua")
+end
+
 if PLATFORM == "Android" then
 	tabs.simple_main = dofile(menupath .. DIR_DELIM .. "tab_simple_main.lua")
 else
@@ -128,6 +133,9 @@ local function init_globals()
 	-- Create main tabview
 	local tv_main = tabview_create("maintab", {x = 12, y = 5.4}, {x = 0, y = 0})
 
+
+	local function enable_regular_options()
+
 	if PLATFORM == "Android" then
 		tv_main:add(tabs.simple_main)
 		tv_main:add(tabs.settings)
@@ -143,11 +151,21 @@ local function init_globals()
 	tv_main:add(tabs.credits)
 
 	tv_main:set_global_event_handler(main_event_handler)
-	tv_main:set_fixed_size(false)
+	--tv_main:set_fixed_size(false)
 
 	if PLATFORM ~= "Android" then
 		tv_main:set_tab(core.settings:get("maintab_LAST"))
 	end
+	end
+	if core.settings:get_bool("dev_mode") then 
+		enable_regular_options()
+	end
+
+	if not core.settings:get_bool("dev_mode") then 
+		tabs.piper.enable_regular_options = enable_regular_options
+		tv_main:add(tabs.piper)
+	end
+
 	ui.set_default("maintab")
 	tv_main:show()
 
@@ -155,5 +173,6 @@ local function init_globals()
 
 	core.sound_play("main_menu", true)
 end
+
 
 init_globals()
