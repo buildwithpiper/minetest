@@ -54,9 +54,15 @@ end
 local tabs = {}
 
 tabs.settings = dofile(menupath .. DIR_DELIM .. "tab_settings.lua")
+
+if not core.settings:get_bool("dev_mode") then 
+	tabs.piper = dofile(menupath .. DIR_DELIM .. "tab_piper.lua")
+end
+
 tabs.content  = dofile(menupath .. DIR_DELIM .. "tab_content.lua")
 tabs.credits  = dofile(menupath .. DIR_DELIM .. "tab_credits.lua")
 if menustyle == "simple" then
+
 	tabs.simple_main = dofile(menupath .. DIR_DELIM .. "tab_simple_main.lua")
 else
 	tabs.local_game = dofile(menupath .. DIR_DELIM .. "tab_local.lua")
@@ -131,24 +137,38 @@ local function init_globals()
 	-- Create main tabview
 	local tv_main = tabview_create("maintab", {x = 12, y = 5.4}, {x = 0, y = 0})
 
-	if menustyle == "simple" then
-		tv_main:add(tabs.simple_main)
-	else
-		tv_main:set_autosave_tab(true)
-		tv_main:add(tabs.local_game)
-		tv_main:add(tabs.play_online)
+
+	local function enable_regular_options()
+
+        if menustyle == "simple" then
+            tv_main:add(tabs.simple_main)
+        else
+            tv_main:set_autosave_tab(true)
+            tv_main:add(tabs.local_game)
+            tv_main:add(tabs.play_online)
+        end
+
+        tv_main:add(tabs.content)
+        tv_main:add(tabs.settings)
+        tv_main:add(tabs.credits)
+
+        tv_main:set_global_event_handler(main_event_handler)
+        --tv_main:set_fixed_size(false)
+
+        if menustyle ~= "simple" then
+            tv_main:set_tab(core.settings:get("maintab_LAST"))
+        end
 	end
 
-	tv_main:add(tabs.content)
-	tv_main:add(tabs.settings)
-	tv_main:add(tabs.credits)
-
-	tv_main:set_global_event_handler(main_event_handler)
-	tv_main:set_fixed_size(false)
-
-	if menustyle ~= "simple" then
-		tv_main:set_tab(core.settings:get("maintab_LAST"))
+	if core.settings:get_bool("dev_mode") then 
+		enable_regular_options()
 	end
+
+	if not core.settings:get_bool("dev_mode") then 
+		tabs.piper.enable_regular_options = enable_regular_options
+		tv_main:add(tabs.piper)
+	end
+
 	ui.set_default("maintab")
 	tv_main:show()
 
@@ -156,5 +176,6 @@ local function init_globals()
 
 	core.sound_play("main_menu", true)
 end
+
 
 init_globals()
