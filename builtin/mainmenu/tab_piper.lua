@@ -64,8 +64,8 @@ local function get_formspec(tabview, name, tabdata)
 	local status = "Connected."
 	local xpos = '7.6'
 	if not update.finished and update.started then
-        e("container[-3,0]")
-        e("textlist[0,0;10,5;us;" .. table.concat(list, ',') .. ';' .. n .. ';false]')
+        e("container[5,1]")
+        e("textlist[-0.25,-0.1;7,2.5;us;" .. table.concat(list, ',') .. ';' .. n .. ';false]')
         e("container_end[]")
 		status = "Connecting..."
 	elseif not data.name then
@@ -79,7 +79,6 @@ local function get_formspec(tabview, name, tabdata)
 		return core.formspec_escape(defaulttexturedir .. "piper" .. DIR_DELIM .. img)
 	end
 
-	if update.finished then
 		e("background[-0.2,-0.25;12.4,6.3;" .. i("background.png") .. "]")			
         --21 - 3.7
 		e("label[" .. 1.9 - (#playername/2) * (3.2/22.0) .. ",4.08;" .. playername .. "]")
@@ -96,11 +95,7 @@ local function get_formspec(tabview, name, tabdata)
 		else
 			e("button[6.8,4.5;3,1.5;trying;Trying to Join]")
 		end
-	end
 
-	if false then
-		draw_grid()
-	end
 	return table.concat(retval, '\n')
 end
 
