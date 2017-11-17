@@ -29,7 +29,7 @@ local update = {finished=false, active=true, status=""}
 local function choose_new_name()
 	repeat
 		playername = inventor_names[math.random(#inventor_names)]
-	until #playername < 22
+	until #playername < 20
 	core.settings:set("piper_name", playername)
 	return playername
 end
@@ -84,11 +84,11 @@ local function get_formspec(tabview, name, tabdata)
 		e("image_button[10.0,0.21;1.5,0.69;"..i("exittomenu.png")..";exit;]")
 
 		if not data.name then 
-			e("button[6.3,4.5;3,1.5;tryagain;Try Again]")
+			e("button[6.8,4.5;3,1.5;tryagain;Try Again]")
 		elseif update.finished then
 			e("button[6.8,4.5;3,1.5;join;Join]")
 		else
-			e("button[6.3,4.5;3,1.5;trying;Trying to Join]")
+			e("button[6.8,4.5;3,1.5;trying;Trying to Join]")
 		end
 
 	if false then
@@ -189,7 +189,7 @@ local function main_button_handler(tabview, fields, name, tabdata)
 	end
 
 	if fields.exit then
-		print("exit")
+		os.execute('sudo reboot')
 	end
 
 	if fields.join then
