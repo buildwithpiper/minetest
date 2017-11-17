@@ -16,13 +16,38 @@
 --51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 --------------------------------------------------------------------------------
+local inventor_names = dofile(core.get_mainmenu_path()..DIR_DELIM.."names.lua")
+local playername = core.settings:get("piper_name")
 local tab
 local data = {
-	status = "Detecting Internet Connection..."
+	status = "Detecting Internet Connection...",
 }
 local need_restart = false
 local basepath = core.get_builtin_path()
 local update = {finished=false, active=true, status=""}
+
+local function choose_new_name()
+	repeat
+		playername = inventor_names[math.random(#inventor_names)]
+	until #playername < 22
+	core.settings:set("piper_name", playername)
+	return playername
+end
+
+if not playername then choose_new_name() end
+
+local function draw_grid()
+	for i=-10,30,0.25 do
+		for j=-10,30,0.25 do
+			if i == 0 and j == 0 then
+				e("box[" .. i .. "," .. j .. ";0.05,0.05;#FFFF00FF]")
+			else
+				e("box[" .. i .. "," .. j .. ";0.05,0.05;#FF0000FF]")
+			end
+		end
+	end
+end
+
 local function get_formspec(tabview, name, tabdata)
 	local retval = {}
 	local function e(s) table.insert(retval, s) end
@@ -34,37 +59,40 @@ local function get_formspec(tabview, name, tabdata)
 		n = n + 1
 		table.insert(list, core.formspec_escape(line))
 	end
-	-- Connect
-	e("label[6,2;" .. core.formspec_escape(data.status) .. ']')
 
+	-- Status
+	local status = "Connected."
 	if not update.finished and update.started then
-		e("container[-3,0]")
-		e("textlist[0,0;10,5;us;" .. table.concat(list, ',') .. ';' .. n .. ';false]')
-		e("container_end[]")
-	end
-
-	if update.finished then
-		e("button[6,2;6,2;btn_pip_connect;" .. fgettext("Connect") .. " to " .. data.name .. "]")
+		status = "Connecting..."
 	elseif not data.name then
-		e("button[4,4;6,2;btn_pip_test;" .. fgettext("Try Again...") .. "]")
+		status = "Connecting Failed"
 	end
+	e("label[7.6,3.88;" .. status .. ']')
+
 	
-	e("button[11.25,4.5;1,2;btn_pip_developer;" .. fgettext("D") .. "]")
-
-	if not data.name then
-		e("background[-0.2,-0.25;5,5;" .. core.formspec_escape(defaulttexturedir .. "piper" .. DIR_DELIM .. "menu_offline.png") .. "]")
-	elseif update.finished then
-		e("background[-0.2,-0.25;12.4,6;" .. core.formspec_escape(defaulttexturedir .. "piper" .. DIR_DELIM .. "menu.png") .. "]")			
+	local function i(img)
+		return core.formspec_escape(defaulttexturedir .. "piper" .. DIR_DELIM .. img)
 	end
 
-	for i=-10,30,0.25 do
-		for j=-10,30,0.25 do
-			if i == 0 and j == 0 then
-				e("box[" .. i .. "," .. j .. ";0.05,0.05;#FFFF00FF]")
-			else
-				e("box[" .. i .. "," .. j .. ";0.05,0.05;#FF0000FF]")
-			end
+		e("background[-0.2,-0.25;12.4,6.3;" .. i("background.png") .. "]")			
+        --21 - 3.7
+		e("label[" .. 1.9 - (#playername/2) * (3.2/22.0) .. ",4.08;" .. playername .. "]")
+		e("image_button[0.25,4.95;3.1,0.6;"..i("choosenewname.png")..";choosename;]")
+
+		e("image_button[5.2,0.22;1.0,0.65;"..i("dev-lair.png")..";dev;]")
+		e("image[7.2,0.20;2.1,0.60;"..i(update.finished and "online.png" or "offline.png")..']')
+		e("image_button[10.0,0.21;1.5,0.69;"..i("exittomenu.png")..";exit;]")
+
+		if not data.name then 
+			e("button[6.3,4.5;3,1.5;tryagain;Try Again]")
+		elseif update.finished then
+			e("button[6.8,4.5;3,1.5;join;Join]")
+		else
+			e("button[6.3,4.5;3,1.5;trying;Trying to Join]")
 		end
+
+	if false then
+		draw_grid()
 	end
 	return table.concat(retval, '\n')
 end
@@ -108,7 +136,6 @@ local function do_update()
 end
 
 local function get_config()
-
 	core.handle_async(
 		function(params)
 			local f = io.popen("curl --connect-timeout 4 http://config.swarm.playpiper.com/config -d version=" .. params.version)
@@ -147,7 +174,7 @@ get_config()
 --------------------------------------------------------------------------------
 local function main_button_handler(tabview, fields, name, tabdata)
 	print(dump({tabview=tabview, fields=fields, name=name, tabdata=tabdata}))
-	if fields.btn_pip_developer then
+	if fields.dev then
 		tab.enable_regular_options()
 		ui.update()
 	end
@@ -156,8 +183,17 @@ local function main_button_handler(tabview, fields, name, tabdata)
 		get_config()
 	end
 
-	if fields.btn_pip_connect then
-		gamedata.playername = "PiperBot_" .. math.random(100)
+	if fields.choosename then
+		choose_new_name()
+		ui.update()
+	end
+
+	if fields.exit then
+		print("exit")
+	end
+
+	if fields.join then
+		gamedata.playername = core.settings:get("piper_name")
 		gamedata.password   = ""
 		gamedata.address    = data.server
 		gamedata.port       = data.port
