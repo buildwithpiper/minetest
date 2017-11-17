@@ -62,12 +62,14 @@ local function get_formspec(tabview, name, tabdata)
 
 	-- Status
 	local status = "Connected."
+	local xpos = '7.6'
 	if not update.finished and update.started then
 		status = "Connecting..."
 	elseif not data.name then
+		local xpos = '7.2'
 		status = "Connecting Failed"
 	end
-	e("label[7.6,3.88;" .. status .. ']')
+	e("label["..xpos..",3.88;" .. status .. ']')
 
 	
 	local function i(img)
@@ -105,7 +107,7 @@ local function read_file(where)
 	return str
 end
 
-local version = tonumber(read_file(basepath .. '..' .. DIR_DELIM .. 'version.txt'))
+local version = tonumber(read_file(basepath .. '..' .. DIR_DELIM .. 'version.txt')) or 0
 print("VERSION IS", version)
 
 local function do_update()
@@ -168,15 +170,18 @@ local function get_config()
 end
 
 mm_texture.clear("header")
-get_config()
-
 
 --------------------------------------------------------------------------------
+local dev_button_count = 0
 local function main_button_handler(tabview, fields, name, tabdata)
 	print(dump({tabview=tabview, fields=fields, name=name, tabdata=tabdata}))
 	if fields.dev then
-		tab.enable_regular_options()
-		ui.update()
+		if dev_button_count >= 2 then
+			tab.enable_regular_options()
+			ui.update()
+		else
+			dev_button_count = dev_button_count + 1
+		end
 	end
 
 	if fields.btn_pip_test then
