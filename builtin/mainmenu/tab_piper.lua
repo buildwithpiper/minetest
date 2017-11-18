@@ -85,7 +85,7 @@ local function get_formspec(tabview, name, tabdata)
 		e("image_button[0.25,4.95;3.1,0.6;"..i("choosenewname.png")..";choosename;]")
 
 		e("image_button[5.2,0.22;1.0,0.65;"..i("dev-lair.png")..";dev;]")
-		e("image[7.2,0.20;2.1,0.60;"..i(update.finished and "online.png" or "offline.png")..']')
+		e("image[7.2,0.20;2.1,0.60;"..i(data.name and "online.png" or "offline.png")..']')
 		e("image_button[10.0,0.21;1.5,0.69;"..i("exittomenu.png")..";exit;]")
 
 		if not data.name then 
@@ -185,7 +185,7 @@ local function main_button_handler(tabview, fields, name, tabdata)
 		end
 	end
 
-	if fields.btn_pip_test then
+	if fields.tryagain then
 		get_config()
 	end
 
