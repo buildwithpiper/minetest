@@ -1120,7 +1120,6 @@ local inventors = {
 "William_Herschel",
 "Gustav_Ludwig_Hertz",
 "Heinrich_Hertz",
-"Karl_F_Herzfeld",
 "Antony_Hewish",
 "David_Hilbert",
 "Maurice_Hilleman",
