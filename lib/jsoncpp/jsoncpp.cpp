@@ -110,12 +110,7 @@ license you like.
 
 namespace Json {
 static char getDecimalPoint() {
-#ifdef JSONCPP_NO_LOCALE_SUPPORT
   return '\0';
-#else
-  struct lconv* lc = localeconv();
-  return lc ? *(lc->decimal_point) : '\0';
-#endif
 }
 
 /// Converts a unicode code-point to UTF-8.

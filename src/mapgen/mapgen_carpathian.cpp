@@ -200,7 +200,7 @@ float MapgenCarpathian::getSteps(float noise)
 	float w = 0.5f;
 	float k = floor(noise / w);
 	float f = (noise - k * w) / w;
-	float s = std::fmin(2.f * f, 1.f);
+	float s = std::min(2.f * f, 1.f);
 	return (k + s) * w;
 }
 
@@ -330,7 +330,7 @@ float MapgenCarpathian::terrainLevelAtPoint(s16 x, s16 z)
 		float hill2 = getLerp(height3, height4, mnt_var);
 		float hill3 = getLerp(height3, height2, mnt_var);
 		float hill4 = getLerp(height1, height4, mnt_var);
-		float hilliness = std::fmax(std::fmin(hill1, hill2), std::fmin(hill3, hill4));
+		float hilliness = std::max(std::min(hill1, hill2), std::min(hill3, hill4));
 
 		// Rolling hills
 		float hill_mnt = hilliness * pow(n_hills, 2.f);
@@ -411,7 +411,7 @@ int MapgenCarpathian::generateTerrain()
 				float hill4 = getLerp(height1, height4, mnt_var);
 				// 'hilliness' determines whether hills/mountains are
 				// small or large
-				float hilliness = std::fmax(std::fmin(hill1, hill2), std::fmin(hill3, hill4));
+				float hilliness = std::max(std::min(hill1, hill2), std::min(hill3, hill4));
 
 				// Rolling hills
 				float hter = noise_hills_terrain->result[index2d];

@@ -75,7 +75,7 @@ LOCAL_CFLAGS := -D_IRR_ANDROID_PLATFORM_      \
 		-DUSE_FREETYPE=1              \
 		-DUSE_LEVELDB=$(HAVE_LEVELDB) \
 		$(GPROF_DEF)                  \
-		-pipe -fstrict-aliasing -std=c++11
+		-pipe -fstrict-aliasing -std=gnu++11
 
 ifndef NDEBUG
 LOCAL_CFLAGS += -g -D_DEBUG -O0 -fno-omit-frame-pointer
