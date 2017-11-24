@@ -3610,6 +3610,20 @@ bool Server::sendModChannelMessage(const std::string &channel, const std::string
 	return true;
 }
 
+bool Server::sendModChannelMessageToPlayer(const std::string &channel, const std::string &name, const std::string &message)
+{
+	if (!m_modchannel_mgr->canWriteOnChannel(channel))
+		return false;
+
+	RemotePlayer *player = m_env->getPlayer(name.c_str());
+	if (!player) {
+		return false;
+	}
+
+	sendModChannelMessage(channel, player->getPeerId(), message, PEER_ID_SERVER);
+	return true;
+}
+
 ModChannel* Server::getModChannel(const std::string &channel)
 {
 	return m_modchannel_mgr->getModChannel(channel);
@@ -3634,6 +3648,11 @@ void Server::broadcastModChannelMessage(const std::string &channel,
 		sender = getPlayerName(from_peer);
 	}
 
+	if (from_peer != PEER_ID_SERVER) {
+		if ( m_script->on_modchannel_message(channel, sender, message) )
+			return;
+	}
+
 	NetworkPacket resp_pkt(TOCLIENT_MODCHANNEL_MSG,
 			2 + channel.size() + 2 + sender.size() + 2 + message.size());
 	resp_pkt << channel << sender << message;
@@ -3645,7 +3664,45 @@ void Server::broadcastModChannelMessage(const std::string &channel,
 		Send(peer_id, &resp_pkt);
 	}
 
-	if (from_peer != PEER_ID_SERVER) {
-		m_script->on_modchannel_message(channel, sender, message);
+
+}
+
+void Server::sendModChannelMessage(const std::string &channel,
+		session_t to_peer, const std::string &message, session_t from_peer)
+{
+	const std::vector<u16> &peers = m_modchannel_mgr->getChannelPeers(channel);
+	if (peers.empty())
+		return;
+
+	if (message.size() > STRING_MAX_LEN) {
+		warningstream << "ModChannel message too long, dropping before sending "
+				<< " (" << message.size() << " > " << STRING_MAX_LEN << ", channel: "
+				<< channel << ")" << std::endl;
+		return;
 	}
+
+	std::string sender;
+	if (from_peer != PEER_ID_SERVER) {
+		sender = getPlayerName(from_peer);
+	}
+
+	if (from_peer != PEER_ID_SERVER) {
+		if ( m_script->on_modchannel_message(channel, sender, message) )
+			return;
+	}
+
+
+	NetworkPacket resp_pkt(TOCLIENT_MODCHANNEL_MSG,
+			2 + channel.size() + 2 + sender.size() + 2 + message.size());
+	resp_pkt << channel << sender << message;
+
+	for (session_t peer_id : peers) {
+		if (peer_id != to_peer)
+			continue;
+
+		Send(peer_id, &resp_pkt);
+		break;
+	}
+
+
 }

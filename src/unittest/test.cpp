@@ -73,6 +73,7 @@ public:
 	bool joinModChannel(const std::string &channel);
 	bool leaveModChannel(const std::string &channel);
 	bool sendModChannelMessage(const std::string &channel, const std::string &message);
+	bool sendModChannelMessageToPlayer(const std::string &channel, const std::string &player, const std::string &message);
 	ModChannel *getModChannel(const std::string &channel)
 	{
 		return m_modchannel_mgr->getModChannel(channel);
@@ -243,6 +244,15 @@ bool TestGameDef::leaveModChannel(const std::string &channel)
 
 bool TestGameDef::sendModChannelMessage(const std::string &channel,
 	const std::string &message)
+{
+	if (!m_modchannel_mgr->channelRegistered(channel))
+		return false;
+
+	return true;
+}
+
+bool TestGameDef::sendModChannelMessageToPlayer(const std::string &channel,
+	const std::string &player, const std::string &message)
 {
 	if (!m_modchannel_mgr->channelRegistered(channel))
 		return false;

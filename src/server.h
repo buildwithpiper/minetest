@@ -343,6 +343,7 @@ public:
 	bool joinModChannel(const std::string &channel);
 	bool leaveModChannel(const std::string &channel);
 	bool sendModChannelMessage(const std::string &channel, const std::string &message);
+	bool sendModChannelMessageToPlayer(const std::string &channel, const std::string &player, const std::string &message);
 	ModChannel *getModChannel(const std::string &channel);
 
 	// Bind address
@@ -410,6 +411,8 @@ private:
 			bool &clouds);
 	void SendCloudParams(session_t peer_id, const CloudParams &params);
 	void SendOverrideDayNightRatio(session_t peer_id, bool do_override, float ratio);
+	void sendModChannelMessage(const std::string &channel,
+			session_t to_peer, const std::string &message, session_t from_peer);
 	void broadcastModChannelMessage(const std::string &channel,
 			const std::string &message, session_t from_peer);
 
