@@ -43,7 +43,8 @@ public:
 
 	const char *sym() const;
 	const char *name() const;
-
+	const wchar_t character() const { return Char; }
+	const irr::EKEY_CODE key() const { return Key; }
 protected:
 	static bool valid_kcode(irr::EKEY_CODE k)
 	{
