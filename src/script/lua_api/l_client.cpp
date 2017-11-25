@@ -36,6 +36,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "util/string.h"
 #include "nodedef.h"
 #include "client/renderingengine.h"
+#include "keycode.h"
 
 int ModApiClient::l_get_current_modname(lua_State *L)
 {
@@ -408,34 +409,21 @@ int ModApiClient::l_send_keys(lua_State *L)
 	errorstream << key << std::endl;
 
 	irr::SEvent myEvent;
+	try {
+		KeyPress data(key.c_str());
+		myEvent.KeyInput.Key = data.key();
+		myEvent.KeyInput.Char = data.character();
+		myEvent.EventType = irr::EET_KEY_INPUT_EVENT;
+		myEvent.KeyInput.PressedDown = down;
 
-	if(key == "space")
-		myEvent.KeyInput.Key = irr::KEY_SPACE;
-	else if(key == "escape")
-		myEvent.KeyInput.Key = irr::KEY_ESCAPE;
-	else if(key == "a")
-		myEvent.KeyInput.Key = irr::KEY_KEY_A;
-	else if(key == "d")
-		myEvent.KeyInput.Key = irr::KEY_KEY_D;
-	else if(key == "s")
-		myEvent.KeyInput.Key = irr::KEY_KEY_S;
-	else if(key == "w")
-		myEvent.KeyInput.Key = irr::KEY_KEY_W;
-	else if(key == "i")
-		myEvent.KeyInput.Key = irr::KEY_KEY_I;
-	else if(key == "z")
-		myEvent.KeyInput.Key = irr::KEY_KEY_Z;
-
-	if (key.size() == 1)
-		myEvent.KeyInput.Char = key[0];
-
-
-	myEvent.EventType = irr::EET_KEY_INPUT_EVENT;
-	myEvent.KeyInput.PressedDown = down;
-
-	irr::IrrlichtDevice* dev = RenderingEngine::get_raw_device();
-	dev->postEventFromUser(myEvent);
-	return 0;
+		irr::IrrlichtDevice* dev = RenderingEngine::get_raw_device();
+		dev->postEventFromUser(myEvent);
+		lua_pushboolean(L, true);
+	} catch ( ... ) {
+		lua_pushboolean(L, false);
+	}
+	
+	return 1;
 }
 
 // Get the window id if we're on Linux, else 0
