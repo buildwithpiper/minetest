@@ -204,6 +204,7 @@ endif()
 
 # Library pack
 find_package(GMP REQUIRED)
+find_package(Duktape REQUIRED)
 find_package(Json REQUIRED)
 find_package(Lua REQUIRED)
 

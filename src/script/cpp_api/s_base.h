@@ -111,6 +111,7 @@ protected:
 	friend class ModApiBase;
 	friend class ModApiEnvMod;
 	friend class LuaVoxelManip;
+	friend class LuaDuktape;
 
 	lua_State* getStack()
 		{ return m_luastack; }
