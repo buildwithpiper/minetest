@@ -18,6 +18,7 @@
 --------------------------------------------------------------------------------
 local inventor_names = dofile(core.get_mainmenu_path()..DIR_DELIM.."names.lua")
 local playername = core.settings:get("piper_name")
+local devmode = core.settings:get("dev_mode")
 local tab
 local data = {
 	status = "Detecting Internet Connection...",
@@ -218,7 +219,7 @@ end
 --------------------------------------------------------------------------------
 tab = {
 	name = "online",
-	caption = fgettext("PiperCraft : Alpha"),
+	caption = fgettext("PiperNet - BETA"),
 	cbf_formspec = get_formspec,
 	cbf_button_handler = main_button_handler,
 	on_change = on_change
