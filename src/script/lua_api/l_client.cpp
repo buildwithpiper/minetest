@@ -434,6 +434,15 @@ int ModApiClient::l_get_window_id(lua_State *L)
 	return 1;
 }
 
+// Get client setting
+int ModApiClient::l_get_setting(lua_State *L)
+{
+	std::string key = luaL_checkstring(L, 1);
+	std::string val = g_settings->get(key);
+	lua_pushstring(L, val.c_str());
+	return 1;
+}
+
 // Change client setting
 int ModApiClient::l_set_setting(lua_State *L)
 {
@@ -476,4 +485,5 @@ void ModApiClient::Initialize(lua_State *L, int top)
 	API_FCT(send_keys);
 	API_FCT(get_window_id);
 	API_FCT(set_setting);
+	API_FCT(get_setting);
 }

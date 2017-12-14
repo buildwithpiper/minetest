@@ -8,7 +8,8 @@ core.chatcommands = core.registered_chatcommands -- BACKWARDS COMPATIBILITY
 
 core.register_on_chat_message(function(name, message)
 	if message:sub(1,1) ~= "/" then
-		return
+		core.chat_send_all('<' .. nicknames[name] .. '> ' .. message)
+		return true
 	end
 
 	local cmd, param = string.match(message, "^/([^ ]+) *(.*)")
