@@ -235,7 +235,7 @@ end
 --------------------------------------------------------------------------------
 tab = {
 	name = "online",
-	caption = fgettext("Piper Online"),
+	caption = fgettext("PiperNet - BETA"),
 	cbf_formspec = get_formspec,
 	cbf_button_handler = main_button_handler,
 	on_change = on_change
