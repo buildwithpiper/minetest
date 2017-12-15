@@ -51,11 +51,13 @@ end
 
 
 function core.send_leave_message(player_name, timed_out)
-	local announcement = "*** " ..  player_name .. " left the game."
-	if timed_out then
-		announcement = announcement .. " (timed out)"
+	if nicknames[player_name] then
+		local announcement = "*** " ..  nicknames[player_name] .. " left the game."
+		if timed_out then
+			announcement = announcement .. " (timed out)"
+		end
+		core.chat_send_all(announcement)
 	end
-	core.chat_send_all(announcement)
 end
 
 
