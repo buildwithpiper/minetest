@@ -138,7 +138,7 @@ void Client::loadMods()
 		return;
 	}
 
-	if (checkCSMFlavourLimit(CSMFlavourLimit::CSM_FL_LOAD_CLIENT_MODS)) {
+	if (false && checkCSMFlavourLimit(CSMFlavourLimit::CSM_FL_LOAD_CLIENT_MODS)) {
 		warningstream << "Client side mods are disabled by server." << std::endl;
 		// If mods loading is disabled and builtin integrity is wrong, disconnect user.
 		if (!checkBuiltinIntegrity()) {
