@@ -257,6 +257,10 @@ function core.item_place_node(itemstack, placer, pointed_thing, param2)
 	local oldnode_above = core.get_node_or_nil(above)
 	local playername = placer:get_player_name()
 
+	if trigger.is_protected(above, "place", {name=itemstack:get_name()}) then
+		return itemstack, false
+	end
+
 	if not oldnode_under or not oldnode_above then
 		core.log("info", playername .. " tried to place"
 			.. " node in unloaded position " .. core.pos_to_string(above))
