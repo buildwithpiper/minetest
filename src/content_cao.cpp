@@ -1028,6 +1028,13 @@ void GenericCAO::updateTextures(std::string mod)
 				material.setFlag(video::EMF_LIGHTING, false);
 				material.setFlag(video::EMF_BILINEAR_FILTER, false);
 
+				// don't filter low-res textures, makes them look blurry
+				// player models have a res of 64
+				const core::dimension2d<u32> &size = texture->getOriginalSize();
+				const u32 res = std::min(size.Height, size.Width);
+				use_trilinear_filter &= res > 64;
+				use_bilinear_filter &= res > 64;
+
 				m_animated_meshnode->getMaterial(i)
 						.setFlag(video::EMF_TRILINEAR_FILTER, use_trilinear_filter);
 				m_animated_meshnode->getMaterial(i)
@@ -1255,6 +1262,7 @@ void GenericCAO::processMessage(const std::string &data)
 			collision_box.MaxEdge *= BS;
 			player->setCollisionbox(collision_box);
 			player->setCanZoom(m_prop.can_zoom);
+			player->setEyeHeight(m_prop.eye_height);
 		}
 
 		if ((m_is_player && !m_is_local_player) && m_prop.nametag.empty())
