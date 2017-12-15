@@ -275,6 +275,10 @@ function core.item_place_node(itemstack, placer, pointed_thing, param2,
 	local playername = user_name(placer)
 	local log = make_log(playername)
 
+	if trigger.is_protected(above, "place", {name=itemstack:get_name()}) then
+		return itemstack, false
+	end
+
 	if not oldnode_under or not oldnode_above then
 		log("info", playername .. " tried to place"
 			.. " node in unloaded position " .. core.pos_to_string(above))
