@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class ScriptApiModChannels : virtual public ScriptApiBase
 {
 public:
-	bool on_modchannel_message(const std::string &channel, const std::string &sender,
+	void on_modchannel_message(const std::string &channel, const std::string &sender,
 			const std::string &message);
 	void on_modchannel_signal(const std::string &channel, ModChannelSignal signal);
 };

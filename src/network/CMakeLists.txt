@@ -17,7 +17,3 @@ if (BUILD_CLIENT)
 	)
 endif()
 
-# Haiku networking support
-if(HAIKU)
-	set(PLATFORM_LIBS -lnetwork ${PLATFORM_LIBS})
-endif()

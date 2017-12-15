@@ -39,12 +39,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "log.h"
 #include "filesys.h"
 #include "gettext.h"
-#include "gui/guiChatConsole.h"
-#include "gui/guiFormSpecMenu.h"
-#include "gui/guiKeyChangeMenu.h"
-#include "gui/guiPasswordChange.h"
-#include "gui/guiVolumeChange.h"
-#include "gui/mainmenumanager.h"
+#include "guiChatConsole.h"
+#include "guiFormSpecMenu.h"
+#include "guiKeyChangeMenu.h"
+#include "guiPasswordChange.h"
+#include "guiVolumeChange.h"
+#include "mainmenumanager.h"
 #include "mapblock.h"
 #include "minimap.h"
 #include "nodedef.h"         // Needed for determining pointing to nodes
@@ -1676,8 +1676,6 @@ bool Game::startup(bool *kill,
 	if (!createClient(playername, password, address, port))
 		return false;
 
-	RenderingEngine::initialize(client, hud);
-
 	return true;
 }
 
@@ -1767,7 +1765,6 @@ void Game::run()
 
 void Game::shutdown()
 {
-	RenderingEngine::finalize();
 #if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 8
 	if (g_settings->get("3d_mode") == "pageflip") {
 		driver->setRenderTarget(irr::video::ERT_STEREO_BOTH_BUFFERS);
@@ -3764,13 +3761,8 @@ void Game::processPlayerInteraction(f32 dtime, bool show_hud, bool show_debug)
 	} else if (pointed.type == POINTEDTHING_NODE) {
 		ToolCapabilities playeritem_toolcap =
 				playeritem.getToolCapabilities(itemdef_manager);
-		if (playeritem.name.empty()) {
-			const ToolCapabilities *handToolcap = hlist
-				? &hlist->getItem(0).getToolCapabilities(itemdef_manager)
-				: itemdef_manager->get("").tool_capabilities;
-
-			if (handToolcap != nullptr)
-				playeritem_toolcap = *handToolcap;
+		if (playeritem.name.empty() && hand_def.tool_capabilities != NULL) {
+			playeritem_toolcap = *hand_def.tool_capabilities;
 		}
 		handlePointingAtNode(pointed, playeritem_def, playeritem,
 			playeritem_toolcap, dtime);
@@ -4076,9 +4068,9 @@ void Game::handleDigging(const PointedThing &pointed, const v3s16 &nodepos,
 	// If can't dig, try hand
 	if (!params.diggable) {
 		InventoryList *hlist = local_inventory->getList("hand");
-		const ToolCapabilities *tp = hlist
-			? &hlist->getItem(0).getToolCapabilities(itemdef_manager)
-			: itemdef_manager->get("").tool_capabilities;
+		const ItemDefinition &hand =
+			hlist ? hlist->getItem(0).getDefinition(itemdef_manager) : itemdef_manager->get("");
+		const ToolCapabilities *tp = hand.tool_capabilities;
 
 		if (tp)
 			params = getDigParams(nodedef_manager->get(n).groups, tp);
@@ -4406,20 +4398,9 @@ void Game::updateFrame(ProfilerGraph *graph, RunStats *stats, f32 dtime,
 	TimeTaker tt_draw("mainloop: draw");
 	driver->beginScene(true, true, skycolor);
 
-	bool draw_wield_tool = (flags.show_hud &&
-			(player->hud_flags & HUD_FLAG_WIELDITEM_VISIBLE) &&
-			(camera->getCameraMode() == CAMERA_MODE_FIRST));
-	bool draw_crosshair = (
-			(player->hud_flags & HUD_FLAG_CROSSHAIR_VISIBLE) &&
-			(camera->getCameraMode() != CAMERA_MODE_THIRD_FRONT));
-#ifdef HAVE_TOUCHSCREENGUI
-	try {
-		draw_crosshair = !g_settings->getBool("touchtarget");
-	} catch (SettingNotFoundException) {
-	}
-#endif
-	RenderingEngine::draw_scene(skycolor, flags.show_hud, flags.show_minimap,
-			draw_wield_tool, draw_crosshair);
+	RenderingEngine::draw_scene(camera, client, player, hud, mapper,
+			guienv, screensize, skycolor, flags.show_hud,
+			flags.show_minimap);
 
 	/*
 		Profiler graph
@@ -4480,7 +4461,7 @@ inline static const char *yawToDirectionString(int yaw)
 
 void Game::updateGui(const RunStats &stats, f32 dtime, const CameraOrientation &cam)
 {
-	v2u32 screensize = RenderingEngine::get_instance()->getWindowSize();
+	v2u32 screensize = driver->getScreenSize();
 	LocalPlayer *player = client->getEnv().getLocalPlayer();
 	v3f player_position = player->getPosition();
 

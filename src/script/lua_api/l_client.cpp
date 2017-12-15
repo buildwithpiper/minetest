@@ -31,15 +31,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "l_internal.h"
 #include "lua_api/l_item.h"
 #include "lua_api/l_nodemeta.h"
-#include "gui/mainmenumanager.h"
+#include "mainmenumanager.h"
 #include "map.h"
 #include "util/string.h"
 #include "nodedef.h"
 #include "client/renderingengine.h"
-<<<<<<< HEAD
-=======
-#include "keycode.h"
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 
 int ModApiClient::l_get_current_modname(lua_State *L)
 {
@@ -205,13 +201,6 @@ int ModApiClient::l_get_node_or_nil(lua_State *L)
 	} else {
 		lua_pushnil(L);
 	}
-	return 1;
-}
-
-int ModApiClient::l_get_language(lua_State *L)
-{
-	char *locale = setlocale(LC_ALL, "");
-	lua_pushstring(L, locale);
 	return 1;
 }
 
@@ -412,7 +401,6 @@ int ModApiClient::l_send_keys(lua_State *L)
 	errorstream << key << std::endl;
 
 	irr::SEvent myEvent;
-<<<<<<< HEAD
 
 	if(key == "space")
 		myEvent.KeyInput.Key = irr::KEY_SPACE;
@@ -441,23 +429,6 @@ int ModApiClient::l_send_keys(lua_State *L)
 	irr::IrrlichtDevice* dev = RenderingEngine::get_raw_device();
 	dev->postEventFromUser(myEvent);
 	return 0;
-=======
-	try {
-		KeyPress data(key.c_str());
-		myEvent.KeyInput.Key = data.key();
-		myEvent.KeyInput.Char = data.character();
-		myEvent.EventType = irr::EET_KEY_INPUT_EVENT;
-		myEvent.KeyInput.PressedDown = down;
-
-		irr::IrrlichtDevice* dev = RenderingEngine::get_raw_device();
-		dev->postEventFromUser(myEvent);
-		lua_pushboolean(L, true);
-	} catch ( ... ) {
-		lua_pushboolean(L, false);
-	}
-	
-	return 1;
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 }
 
 // Get the window id if we're on Linux, else 0
@@ -468,18 +439,6 @@ int ModApiClient::l_get_window_id(lua_State *L)
 	return 1;
 }
 
-<<<<<<< HEAD
-=======
-// Get client setting
-int ModApiClient::l_get_setting(lua_State *L)
-{
-	std::string key = luaL_checkstring(L, 1);
-	std::string val = g_settings->get(key);
-	lua_pushstring(L, val.c_str());
-	return 1;
-}
-
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 // Change client setting
 int ModApiClient::l_set_setting(lua_State *L)
 {
@@ -515,18 +474,10 @@ void ModApiClient::Initialize(lua_State *L, int top)
 	API_FCT(take_screenshot);
 	API_FCT(get_privilege_list);
 	API_FCT(get_builtin_path);
-<<<<<<< HEAD
-=======
-	API_FCT(get_language);
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 	API_FCT(send_plugin_message);
 	API_FCT(free_cursor);
 	API_FCT(lock_cursor);
 	API_FCT(send_keys);
 	API_FCT(get_window_id);
 	API_FCT(set_setting);
-<<<<<<< HEAD
-=======
-	API_FCT(get_setting);
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 }

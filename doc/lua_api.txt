@@ -214,8 +214,7 @@ when registering it.
 
 The `:` prefix can also be used for maintaining backwards compatibility.
 
-Aliases
--------
+### Aliases
 Aliases can be added by using `minetest.register_alias(name, convert_to)` or
 `minetest.register_alias_force(name, convert_to)`.
 
@@ -235,75 +234,6 @@ you have an item called `epiclylongmodname:stuff`, you could do
     minetest.register_alias("stuff", "epiclylongmodname:stuff")
 
 and be able to use `/giveme stuff`.
-
-Mapgen aliases
---------------
-In a game, a certain number of these must be set to tell core mapgens which
-of the game's nodes are to be used by the core mapgens. For example:
-
-    minetest.register_alias("mapgen_stone", "default:stone")
-
-### Aliases needed for all mapgens except Mapgen v6
-
-Base terrain:
-
-"mapgen_stone"
-"mapgen_water_source"
-"mapgen_river_water_source"
-
-Caves:
-
-"mapgen_lava_source"
-
-Dungeons:
-
-Only needed for registered biomes where 'node_stone' is stone:
-"mapgen_cobble"
-"mapgen_stair_cobble"
-"mapgen_mossycobble"
-Only needed for registered biomes where 'node_stone' is desert stone:
-"mapgen_desert_stone"
-"mapgen_stair_desert_stone"
-Only needed for registered biomes where 'node_stone' is sandstone:
-"mapgen_sandstone"
-"mapgen_sandstonebrick"
-"mapgen_stair_sandstone_block"
-
-### Aliases needed for Mapgen v6
-
-Terrain and biomes:
-
-"mapgen_stone"
-"mapgen_water_source"
-"mapgen_lava_source"
-"mapgen_dirt"
-"mapgen_dirt_with_grass"
-"mapgen_sand"
-"mapgen_gravel"
-"mapgen_desert_stone"
-"mapgen_desert_sand"
-"mapgen_dirt_with_snow"
-"mapgen_snowblock"
-"mapgen_snow"
-"mapgen_ice"
-
-Flora:
-
-"mapgen_tree"
-"mapgen_leaves"
-"mapgen_apple"
-"mapgen_jungletree"
-"mapgen_jungleleaves"
-"mapgen_junglegrass"
-"mapgen_pine_tree"
-"mapgen_pine_needles"
-
-Dungeons:
-
-"mapgen_cobble"
-"mapgen_stair_cobble"
-"mapgen_mossycobble"
-"mapgen_stair_desert_stone"
 
 Textures
 --------
@@ -1175,7 +1105,7 @@ Creates a deformed sphere of ore according to 3d perlin noise described by
 
 ### `vein`
 Creates veins of ore varying in density by according to the intersection of two
-instances of 3d perlin noise with different seeds, both described by
+instances of 3d perlin noise with diffferent seeds, both described by
 `noise_params`.
 
 `random_factor` varies the influence random chance has on placement of an ore
@@ -1206,24 +1136,19 @@ computationally expensive than any other ore.
 Creates a single undulating ore stratum that is continuous across mapchunk
 borders and horizontally spans the world.
 
-The 2D perlin noise described by `noise_params` defines the Y co-ordinate of the
+The 2D perlin noise described by `noise_params` varies the Y co-ordinate of the
 stratum midpoint. The 2D perlin noise described by `np_stratum_thickness`
-defines the stratum's vertical thickness (in units of nodes). Due to being
+varies the stratum's vertical thickness (in units of nodes). Due to being
 continuous across mapchunk borders the stratum's vertical thickness is
 unlimited.
-
-If the noise parameter `noise_params` is omitted the ore will occur from y_min
-to y_max in a simple horizontal stratum.
-
-A parameter `stratum_thickness` can be provided instead of the noise parameter
-`np_stratum_thickness`, to create a constant thickness.
-
-Leaving out one or both noise parameters makes the ore generation less intensive,
-useful when adding multiple strata.
 
 `y_min` and `y_max` define the limits of the ore generation and for performance
 reasons should be set as close together as possible but without clipping the
 stratum's Y variation.
+
+If either of the 2 noise parameters are omitted the ore will occur from y_min
+to y_max in a simple horizontal stratum. As this does not compute noise
+performance improves, and is ideal for placing many layers.
 
 Each node in the stratum has a 1-in-`clust_scarcity` chance of being ore, so a
 solid-ore stratum would require a `clust_scarcity` of 1.
@@ -1276,7 +1201,7 @@ in the form of a table.  This table specifies the following fields:
 
 * The `size` field is a 3D vector containing the dimensions of the provided schematic. (required)
 * The `yslice_prob` field is a table of {ypos, prob} which sets the `ypos`th vertical slice
-  of the schematic to have a `prob / 256 * 100` chance of occurring. (default: 255)
+  of the schematic to have a `prob / 256 * 100` chance of occuring. (default: 255)
 * The `data` field is a flat table of MapNode tables making up the schematic,
   in the order of `[z [y [x]]]`. (required)
   Each MapNode table contains:
@@ -1762,7 +1687,7 @@ the entity itself.
 * `direction` is a unit vector, pointing from the source of the punch to
    the punched object.
 * `damage` damage that will be done to entity
-Return value of this function will determine if damage is done by this function
+Return value of this function will determin if damage is done by this function
 (retval true) or shall be done by engine (retval false)
 
 To punch an entity/object in Lua, call:
@@ -2455,10 +2380,6 @@ Strings that need to be translated can contain several escapes, preceded by `@`.
       * nil: return all entries,
       * true: return only subdirectory names, or
       * false: return only file names.
-* `minetest.safe_file_write(path, content)`: returns boolean indicating success
-    * Replaces contents of file at path with new contents in a safe (atomic) way.
-      Use this instead of below code when writing e.g. database files:
-      `local f = io.open(path, "wb"); f:write(content); f:close()`
 * `minetest.get_version()`: returns a table containing components of the
    engine version.  Components:
     * `project`: Name of the project, eg, "Minetest"
@@ -2470,9 +2391,6 @@ Strings that need to be translated can contain several escapes, preceded by `@`.
   version entirely. To check for the presence of engine features, test
   whether the functions exported by the wanted features exist. For example:
   `if minetest.check_for_falling then ... end`.
-* `minetest.sha1(data, [raw])`: returns the sha1 hash of data
-    * `data`: string of data to hash
-    * `raw`: return raw bytes instead of hex digits, default: false
 
 ### Logging
 * `minetest.debug(...)`
@@ -2492,8 +2410,6 @@ Call these functions only at load time!
 * `minetest.register_craftitem(name, item definition)`
 * `minetest.unregister_item(name)`
 * `minetest.register_alias(name, convert_to)`
-    * Also use this to set the 'mapgen aliases' needed in a game for the core
-    * mapgens. See 'Mapgen aliases' section above.
 * `minetest.register_alias_force(name, convert_to)`
 * `minetest.register_craft(recipe)`
     * Check recipe table syntax for different types below.
@@ -2528,7 +2444,6 @@ Call these functions only at load time!
 * `minetest.register_on_placenode(func(pos, newnode, placer, oldnode, itemstack, pointed_thing))`
     * Called when a node has been placed
     * If return `true` no item is taken from `itemstack`
-    * `placer` may be any valid ObjectRef or nil.
     * **Not recommended**; use `on_construct` or `after_place_node` in node definition
       whenever possible
 * `minetest.register_on_dignode(func(pos, oldnode, digger))`
@@ -2656,7 +2571,7 @@ Call these functions only at load time!
 ### Authentication
 * `minetest.notify_authentication_modified(name)`
     * Should be called by the authentication handler if privileges changes.
-    * `name`: string, if omitted, everybody is reported
+    * `name`: string, if ommited, everybody is reported
 * `minetest.check_password_entry(name, entry, password)`
     * Returns true if the "db entry" for a player with name matches given
     * password, false otherwise.
@@ -2687,7 +2602,7 @@ Call these functions only at load time!
 * `minetest.get_player_ip(name)`: returns an IP address string
 
 `minetest.set_player_password`, `minetest_set_player_privs`, `minetest_get_player_privs`
-and `minetest.auth_reload` call the authentication handler.
+and `minetest.auth_reload` call the authetification handler.
 
 ### Chat
 * `minetest.chat_send_all(text)`
@@ -3304,7 +3219,6 @@ These functions return the leftover itemstack.
     * Returns true, if player `name` shouldn't be abled to dig at `pos` or do other
       actions, defineable by mods, due to some mod-defined ownership-like concept.
       Returns false or nil, if the player is allowed to do such actions.
-    * `name` will be "" for non-players or unknown players.
     * This function should be overridden by protection mods and should be used to
       check if a player can interact at a position.
     * This function should call the old version of itself if the position is not
@@ -3450,9 +3364,6 @@ Can be obtained via `item:get_meta()`.
 
 #### Methods
 * All methods in MetaDataRef
-* `set_tool_capabilities([tool_capabilities])`
-    * overrides the item's tool capabilities
-    * a nil value will clear the override data and restore the original behavior
 
 ### `StorageRef`
 Mod metadata: per mod metadata, saved automatically.
@@ -3855,7 +3766,7 @@ A fast, bulk perlin noise generator.
 It can be created via `PerlinNoiseMap(noiseparams, size)` or
 `minetest.get_perlin_map(noiseparams, size)`.
 
-Format of `size` is `{x=dimx, y=dimy, z=dimz}`.  The `z` component is omitted
+Format of `size` is `{x=dimx, y=dimy, z=dimz}`.  The `z` conponent is ommitted
 for 2D noise, and it must be must be larger than 1 for 3D noise (otherwise
 `nil` is returned).
 
@@ -4113,16 +4024,12 @@ It can be created via `Settings(filename)`.
 #### Methods
 * `get(key)`: returns a value
 * `get_bool(key)`: returns a boolean
-* `get_np_group(key)`: returns a NoiseParams table
 * `set(key, value)`
     * Setting names can't contain whitespace or any of `="{}#`.
     * Setting values can't contain the sequence `\n"""`.
     * Setting names starting with "secure." can't be set on the main settings object (`minetest.settings`).
 * `set_bool(key, value)`
     * See documentation for set() above.
-* `set_np_group(key, value)`
-    * `value` is a NoiseParams table.
-    * Also, see documentation for set() above.
 * `remove(key)`: returns a boolean (`true` for success)
 * `get_names()`: returns `{key1,...}`
 * `write()`: returns a boolean (`true` for success)
@@ -4315,8 +4222,6 @@ Definition tables
     --  ^ For players only. Defaults to `minetest.PLAYER_MAX_BREATH_DEFAULT`
         can_zoom = true,
     --  ^ For players only. Enables the zoom feature. Defaults to true
-        eye_height = 1.625,
-    --  ^ For players only. Camera height above feet position in nodes. Defaults to 1.625
         physical = true,
         collide_with_objects = true, -- collide with other objects if physical = true
         weight = 5,
@@ -4344,16 +4249,15 @@ Definition tables
         backface_culling = true, -- false to disable backface_culling for model
         glow = 0,
     --  ^ Add this much extra lighting when calculating texture color.
-    --    Value < 0 disables light's effect on texture color.
-    --    For faking self-lighting, UI style entities, or programmatic coloring in mods.
+          value < 0 disables light's effect on texture color.
+          For faking self-lighting, UI style entities, or programmatic coloring in mods.
         nametag = "", -- by default empty, for players their name is shown if empty
         nametag_color = <color>, -- sets color of nametag as ColorSpec
         infotext = "", -- by default empty, text to be shown when pointed at object
         static_save = true,
-    --  ^ If false, never save this object statically. It will simply be deleted when the
-    --    block gets unloaded.
-    --    The get_staticdata() callback is never called then.
-    --    Defaults to 'true'
+    --  ^ If false, never save this object statically. It will simply be deleted when the block gets unloaded.
+    --  ^ The get_staticdata() callback is never called then.
+    --  ^ Defaults to 'true'
     }
 
 ### Entity definition (`register_entity`)
@@ -4700,7 +4604,6 @@ Definition tables
         ^ Called after constructing node when node was placed using
           minetest.item_place_node / minetest.place_node
         ^ If return true no item is taken from itemstack
-	^ `placer` may be any valid ObjectRef or nil
         ^ default: nil ]]
         after_dig_node = func(pos, oldnode, oldmetadata, digger), --[[
         ^ oldmetadata is in table format
@@ -4818,29 +4721,27 @@ Definition tables
 
 ### Ore definition (`register_ore`)
 
-	See 'Ore types' section above for essential information.
-
     {
-        ore_type = "scatter",
+        ore_type = "scatter", -- See "Ore types"
         ore = "default:stone_with_coal",
         ore_param2 = 3,
     --  ^ Facedir rotation. Default is 0 (unchanged rotation)
         wherein = "default:stone",
     --  ^ a list of nodenames is supported too
-        clust_scarcity = 8 * 8 * 8,
+        clust_scarcity = 8*8*8,
     --  ^ Ore has a 1 out of clust_scarcity chance of spawning in a node
-    --  ^ If the desired average distance between ores is 'd', set this to d * d * d.
+    --  ^ This value should be *MUCH* higher than your intuition might tell you!
         clust_num_ores = 8,
     --  ^ Number of ores in a cluster
         clust_size = 3,
     --  ^ Size of the bounding box of the cluster
-    --  ^ In this example, there is a 3 * 3 * 3 cluster where 8 out of the 27 nodes
+    --  ^ In this example, there is a 3x3x3 cluster where 8 out of the 27 nodes
     --  ^ are coal ore.
         y_min = -31000,
         y_max = 64,
     --  ^ Lower and upper limits for ore.
         flags = "",
-    --  ^ Attributes for this ore generation, see 'Ore attributes' section above.
+    --  ^ Attributes for this ore generation
         noise_threshold = 0.5,
     --  ^ If noise is above this threshold, ore is placed. Not needed for a
     --  ^ uniform distribution.
@@ -4854,51 +4755,17 @@ Definition tables
         },
     --  ^ NoiseParams structure describing one of the perlin noises used for ore
     --  ^ distribution.
-    --  ^ Needed by "sheet", "puff", "blob" and "vein" ores.
     --  ^ Omit from "scatter" ore for a uniform ore distribution.
     --  ^ Omit from "stratum ore for a simple horizontal strata from y_min to y_max.
+        random_factor = 1.0,
+    --  ^ Multiplier of the randomness contribution to the noise value at any
+    --  ^ given point to decide if ore should be placed.  Set to 0 for solid veins.
+    --  ^ This parameter is only valid for ore_type == "vein".
         biomes = {"desert", "rainforest"}
     --  ^ List of biomes in which this decoration occurs.
     --  ^ Occurs in all biomes if this is omitted, and ignored if the Mapgen being
     --  ^ used does not support biomes.
     --  ^ Can be a list of (or a single) biome names, IDs, or definitions.
-        column_height_min = 1,
-        column_height_max = 16,
-        column_midpoint_factor = 0.5,
-    --  ^ See 'Ore types' section above.
-    --  ^ The above 3 parameters are only valid for "sheet" ore.
-        np_puff_top = {
-            offset = 4,
-            scale = 2,
-            spread = {x = 100, y = 100, z = 100},
-            seed = 47,
-            octaves = 3,
-            persist = 0.7
-        },
-        np_puff_bottom = {
-            offset = 4,
-            scale = 2,
-            spread = {x = 100, y = 100, z = 100},
-            seed = 11,
-            octaves = 3,
-            persist = 0.7
-        },
-    --  ^ See 'Ore types' section above.
-    --  ^ The above 2 parameters are only valid for "puff" ore.
-        random_factor = 1.0,
-    --  ^ See 'Ore types' section above.
-    --  ^ Only valid for "vein" ore.
-        np_stratum_thickness = {
-            offset = 8,
-            scale = 4,
-            spread = {x = 100, y = 100, z = 100},
-            seed = 17,
-            octaves = 3,
-            persist = 0.7
-        },
-        stratum_thickness = 8,
-    --  ^ See 'Ore types' section above.
-    --  ^ The above 2 parameters are only valid for "stratum" ore.
     }
 
 ### Biome definition (`register_biome`)
@@ -4939,7 +4806,7 @@ Definition tables
     --  ^ diagram to result in roughly equal size biomes.
     --  ^ Heat and humidity have average values of 50, vary mostly between
     --  ^ 0 and 100 but also often exceed these values.
-    --  ^ Heat is not in degrees Celsius, both values are abstract.
+    --  ^ Heat is not in degrees celcius, both values are abstract.
     }
 
 ### Decoration definition (`register_decoration`)
@@ -4972,22 +4839,12 @@ Definition tables
         num_spawn_by = 1,
     --  ^ Number of spawn_by nodes that must be surrounding the decoration position to occur.
     --  ^ If absent or -1, decorations occur next to any nodes.
-        flags = "liquid_surface, force_placement, all_floors, all_ceilings",
+        flags = "liquid_surface, force_placement",
     --  ^ Flags for all decoration types.
-    --  ^ "liquid_surface": Instead of placement on the highest solid surface
-    --  ^   in a mapchunk column, placement is on the highest liquid surface.
-    --  ^   Placement is disabled if solid nodes are found above the liquid
-    --  ^   surface.
-    --  ^ "force_placement": Nodes other than "air" and "ignore" are replaced
-    --  ^   by the decoration.
-    --  ^ "all_floors", "all_ceilings": Instead of placement on the highest
-    --  ^   surface in a mapchunk the decoration is placed on all floor and/or
-    --  ^   ceiling surfaces, for example in caves.
-    --  ^   Ceiling decorations act as an inversion of floor decorations so the
-    --  ^   effect of 'place_offset_y' is inverted.
-    --  ^   If a single decoration registration has both flags the floor and
-    --  ^   ceiling decorations will be aligned vertically and may sometimes
-    --  ^   meet to form a column.
+    --  ^ "liquid_surface": Instead of placement on the highest solid surface in
+    --  ^ a mapchunk column, placement is on the highest liquid surface. Placement
+    --  ^ is disabled if solid nodes are found above the liquid surface.
+    --  ^ "force_placement": Nodes other than "air" and "ignore" are replaced by the decoration.
 
         ----- Simple-type parameters
         decoration = "default:grass",
@@ -5006,10 +4863,9 @@ Definition tables
     --  ^ Upper limit of the randomly selected param2.
     --  ^ If absent, the parameter 'param2' is used as a constant.
         place_offset_y = 0,
-    --  ^ Y offset of the decoration base node relative to the standard base
-    --  ^ node position.
+    --  ^ Y offset of the decoration base node relative to the standard
+    --  ^ base node position for simple decorations.
     --  ^ Can be positive or negative. Default is 0.
-    --  ^ Effect is inverted for "all_ceilings" decorations.
     --  ^ Ignored by 'y_min', 'y_max' and 'spawn_by' checks, which always refer
     --  ^ to the 'place_on' node.
 
@@ -5042,13 +4898,12 @@ Definition tables
         rotation = "90" -- rotate schematic 90 degrees on placement
     --  ^ Rotation can be "0", "90", "180", "270", or "random".
         place_offset_y = 0,
-    --  ^ If the flag 'place_center_y' is set this parameter is ignored.
     --  ^ Y offset of the schematic base node layer relative to the 'place_on'
     --  ^ node.
     --  ^ Can be positive or negative. Default is 0.
-    --  ^ Effect is inverted for "all_ceilings" decorations.
-    --  ^ Ignored by 'y_min', 'y_max' and 'spawn_by' checks, which always refer
-    --  ^ to the 'place_on' node.
+    --  ^ If the flag 'place_center_y' is set this parameter is ignored.
+    --  ^ If absent or 0 the schematic base node layer will be placed level
+    --  ^ with the 'place_on' node.
     }
 
 ### Chat command definition (`register_chatcommand`)
@@ -5197,7 +5052,7 @@ Definition tables
         completed = true,
      -- ^ If true, the request has finished (either succeeded, failed or timed out)
         succeeded = true,
-     -- ^ If true, the request was successful
+     -- ^ If true, the request was succesful
         timeout = false,
      -- ^ If true, the request timed out
         code = 200,
