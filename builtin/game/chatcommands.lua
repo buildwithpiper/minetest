@@ -8,7 +8,8 @@ core.chatcommands = core.registered_chatcommands -- BACKWARDS COMPATIBILITY
 
 core.register_on_chat_message(function(name, message)
 	if message:sub(1,1) ~= "/" then
-		return
+		core.chat_send_all('<' .. nicknames[name] .. '> ' .. message)
+		return true
 	end
 
 	local cmd, param = string.match(message, "^/([^ ]+) *(.*)")
@@ -667,8 +668,8 @@ core.register_chatcommand("pulverize", {
 core.rollback_punch_callbacks = {}
 
 core.register_on_punchnode(function(pos, node, puncher)
-	local name = puncher:get_player_name()
-	if core.rollback_punch_callbacks[name] then
+	local name = puncher and puncher:get_player_name()
+	if name and core.rollback_punch_callbacks[name] then
 		core.rollback_punch_callbacks[name](pos, node, puncher)
 		core.rollback_punch_callbacks[name] = nil
 	end
@@ -896,10 +897,10 @@ core.register_chatcommand("clearobjects", {
 	privs = {server=true},
 	func = function(name, param)
 		local options = {}
-		if param == "" or param == "full" then
-			options.mode = "full"
-		elseif param == "quick" then
+		if param == "" or param == "quick" then
 			options.mode = "quick"
+		elseif param == "full" then
+			options.mode = "full"
 		else
 			return false, "Invalid usage, see /help clearobjects."
 		end

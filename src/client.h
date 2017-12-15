@@ -432,6 +432,11 @@ public:
 	bool joinModChannel(const std::string &channel);
 	bool leaveModChannel(const std::string &channel);
 	bool sendModChannelMessage(const std::string &channel, const std::string &message);
+	bool sendModChannelMessageToPlayer(const std::string &channel, const std::string &who, const std::string &message) 
+	{
+		return false;
+	}
+	
 	ModChannel *getModChannel(const std::string &channel);
 
 	bool cursorFree;

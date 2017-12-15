@@ -45,6 +45,7 @@ private:
 	static int l_get_data(lua_State *L);
 	static int l_set_data(lua_State *L);
 	static int l_write_to_map(lua_State *L);
+	static int l_ghost_to_player(lua_State *L);
 
 	static int l_get_node_at(lua_State *L);
 	static int l_set_node_at(lua_State *L);

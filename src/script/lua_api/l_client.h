@@ -69,6 +69,8 @@ private:
 	// get_node(pos)
 	static int l_get_node_or_nil(lua_State *L);
 
+	static int l_get_language(lua_State *L);
+
 	// get_wielded_item()
 	static int l_get_wielded_item(lua_State *L);
 
@@ -112,6 +114,12 @@ private:
 	// Get the window id if we're on Linux, else 0
 	static int l_get_window_id(lua_State *L);
 
+<<<<<<< HEAD
+=======
+	// Get client setting
+	static int l_get_setting(lua_State *L);
+
+>>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 	// Change client setting
 	static int l_set_setting(lua_State *L);
 public:
