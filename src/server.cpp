@@ -44,8 +44,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "itemdef.h"
 #include "craftdef.h"
 #include "emerge.h"
-#include "mapgen/mapgen.h"
-#include "mapgen/mg_biome.h"
+#include "mapgen.h"
+#include "mg_biome.h"
 #include "content_mapnode.h"
 #include "content_nodemeta.h"
 #include "content_sao.h"
@@ -61,7 +61,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "util/base64.h"
 #include "util/sha1.h"
 #include "util/hex.h"
-#include "database/database.h"
+#include "database.h"
 #include "chatmessage.h"
 #include "chat_interface.h"
 #include "remoteplayer.h"
@@ -253,8 +253,9 @@ Server::Server(
 	m_nodedef->updateAliases(m_itemdef);
 
 	// Apply texture overrides from texturepack/override.txt
-	for (const auto &path : fs::GetRecursiveDirs(g_settings->get("texture_path")))
-		m_nodedef->applyTextureOverrides(path + DIR_DELIM + "override.txt");
+	std::string texture_path = g_settings->get("texture_path");
+	if (!texture_path.empty() && fs::IsDir(texture_path))
+		m_nodedef->applyTextureOverrides(texture_path + DIR_DELIM + "override.txt");
 
 	m_nodedef->setNodeRegistrationStatus(true);
 
@@ -2252,8 +2253,8 @@ void Server::fillMediaCache()
 		paths.push_back(mod.path + DIR_DELIM + "models");
 		paths.push_back(mod.path + DIR_DELIM + "locale");
 	}
-	fs::GetRecursiveDirs(paths, porting::path_user + DIR_DELIM +
-			"textures" + DIR_DELIM + "server");
+	paths.push_back(porting::path_user + DIR_DELIM + "textures" + DIR_DELIM + "server");
+
 	// Collect media file information from paths into cache
 	for (const std::string &mediapath : paths) {
 		std::vector<fs::DirListNode> dirlist = fs::GetDirListing(mediapath);
@@ -3557,17 +3558,11 @@ void Server::sendPluginMessage(const char *name, const std::string &plugin, cons
 	if (!player) {
 		return;
 	}
-<<<<<<< HEAD
 	errorstream<<"Got player!"<<std::endl;
 	if (player->getPeerId() == PEER_ID_INEXISTENT)
 		return;
 
 	errorstream<<"Got peer!"<<std::endl;
-=======
-	if (player->getPeerId() == PEER_ID_INEXISTENT)
-		return;
-
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 	NetworkPacket pkt(TOCLIENT_PLUGIN_MESSAGE, 0, player->getPeerId());
 	pkt << plugin << data;
 
@@ -3647,20 +3642,6 @@ bool Server::sendModChannelMessage(const std::string &channel, const std::string
 	return true;
 }
 
-bool Server::sendModChannelMessageToPlayer(const std::string &channel, const std::string &name, const std::string &message)
-{
-	if (!m_modchannel_mgr->canWriteOnChannel(channel))
-		return false;
-
-	RemotePlayer *player = m_env->getPlayer(name.c_str());
-	if (!player) {
-		return false;
-	}
-
-	sendModChannelMessage(channel, player->getPeerId(), message, PEER_ID_SERVER);
-	return true;
-}
-
 ModChannel* Server::getModChannel(const std::string &channel)
 {
 	return m_modchannel_mgr->getModChannel(channel);
@@ -3685,11 +3666,6 @@ void Server::broadcastModChannelMessage(const std::string &channel,
 		sender = getPlayerName(from_peer);
 	}
 
-	if (from_peer != PEER_ID_SERVER) {
-		if ( m_script->on_modchannel_message(channel, sender, message) )
-			return;
-	}
-
 	NetworkPacket resp_pkt(TOCLIENT_MODCHANNEL_MSG,
 			2 + channel.size() + 2 + sender.size() + 2 + message.size());
 	resp_pkt << channel << sender << message;
@@ -3701,45 +3677,7 @@ void Server::broadcastModChannelMessage(const std::string &channel,
 		Send(peer_id, &resp_pkt);
 	}
 
-
-}
-
-void Server::sendModChannelMessage(const std::string &channel,
-		session_t to_peer, const std::string &message, session_t from_peer)
-{
-	const std::vector<u16> &peers = m_modchannel_mgr->getChannelPeers(channel);
-	if (peers.empty())
-		return;
-
-	if (message.size() > STRING_MAX_LEN) {
-		warningstream << "ModChannel message too long, dropping before sending "
-				<< " (" << message.size() << " > " << STRING_MAX_LEN << ", channel: "
-				<< channel << ")" << std::endl;
-		return;
-	}
-
-	std::string sender;
 	if (from_peer != PEER_ID_SERVER) {
-		sender = getPlayerName(from_peer);
+		m_script->on_modchannel_message(channel, sender, message);
 	}
-
-	if (from_peer != PEER_ID_SERVER) {
-		if ( m_script->on_modchannel_message(channel, sender, message) )
-			return;
-	}
-
-
-	NetworkPacket resp_pkt(TOCLIENT_MODCHANNEL_MSG,
-			2 + channel.size() + 2 + sender.size() + 2 + message.size());
-	resp_pkt << channel << sender << message;
-
-	for (session_t peer_id : peers) {
-		if (peer_id != to_peer)
-			continue;
-
-		Send(peer_id, &resp_pkt);
-		break;
-	}
-
-
 }

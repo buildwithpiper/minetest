@@ -118,27 +118,13 @@ Compiling
 
 ### Compiling on GNU/Linux
 
-#### Dependencies
-
-| Dependency | Version | Commentary |
-|------------|---------|------------|
-| GCC        | 4.9+    | Can be replaced with Clang 3.4+ |
-| CMake      | 2.6+    |            |
-| Irrlicht   | 1.7.3+  |            |
-| SQLite3    | 3.0+    |            |
-| LuaJIT     | 2.0+    | Bundled Lua 5.1 is used if not present |
-| GMP        | 5.0.0+  | Bundled mini-GMP is used if not present |
-| JsonCPP    | 1.0.0+  | Bundled JsonCPP is used if not present |
-
-For Debian/Ubuntu:
+Install dependencies. Here's an example for Debian/Ubuntu:
 
     $ sudo apt-get install build-essential libirrlicht-dev cmake libbz2-dev libpng-dev libjpeg-dev libxxf86vm-dev libgl1-mesa-dev libsqlite3-dev libogg-dev libvorbis-dev libopenal-dev libcurl4-gnutls-dev libfreetype6-dev zlib1g-dev libgmp-dev libjsoncpp-dev
 
 For Fedora users:
 
     $ sudo dnf install make automake gcc gcc-c++ kernel-devel cmake libcurl* openal* libvorbis* libXxf86vm-devel libogg-devel freetype-devel mesa-libGL-devel zlib-devel jsoncpp-devel irrlicht-devel bzip2-libs gmp-devel sqlite-devel luajit-devel leveldb-devel ncurses-devel doxygen spatialindex-devel bzip2-devel
-
-#### Download
 
 You can install git for easily keeping your copy up to date.
 If you don’t want git, read below on how to get the source without git.  
@@ -172,8 +158,6 @@ Download minetest_game, without using git:
     $ tar xf master.tar.gz
     $ mv minetest_game-master minetest_game
     $ cd ..
-
-#### Build
 
 Build a version that runs directly from the source directory:
 

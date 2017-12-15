@@ -159,7 +159,7 @@ private:
 	float m_chat_message_allowance = 5.0f;
 	u16 m_message_rate_overhead = 0;
 
-	bool m_day_night_ratio_do_override = false;
+	bool m_day_night_ratio_do_override;
 	float m_day_night_ratio;
 	std::string hud_hotbar_image = "";
 	std::string hud_hotbar_selected_image = "";

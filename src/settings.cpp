@@ -361,18 +361,6 @@ const SettingsEntry &Settings::getEntry(const std::string &name) const
 }
 
 
-const SettingsEntry &Settings::getEntryDefault(const std::string &name) const
-{
-	MutexAutoLock lock(m_mutex);
-
-	SettingEntries::const_iterator n;
-	if ((n = m_defaults.find(name)) == m_defaults.end()) {
-		throw SettingNotFoundException("Setting [" + name + "] not found.");
-	}
-	return n->second;
-}
-
-
 Settings *Settings::getGroup(const std::string &name) const
 {
 	const SettingsEntry &entry = getEntry(name);
@@ -385,15 +373,6 @@ Settings *Settings::getGroup(const std::string &name) const
 const std::string &Settings::get(const std::string &name) const
 {
 	const SettingsEntry &entry = getEntry(name);
-	if (entry.is_group)
-		throw SettingNotFoundException("Setting [" + name + "] is a group.");
-	return entry.value;
-}
-
-
-const std::string &Settings::getDefault(const std::string &name) const
-{
-	const SettingsEntry &entry = getEntryDefault(name);
 	if (entry.is_group)
 		throw SettingNotFoundException("Setting [" + name + "] is a group.");
 	return entry.value;
@@ -592,17 +571,6 @@ bool Settings::getEntryNoEx(const std::string &name, SettingsEntry &val) const
 }
 
 
-bool Settings::getEntryDefaultNoEx(const std::string &name, SettingsEntry &val) const
-{
-	try {
-		val = getEntryDefault(name);
-		return true;
-	} catch (SettingNotFoundException &e) {
-		return false;
-	}
-}
-
-
 bool Settings::getGroupNoEx(const std::string &name, Settings *&val) const
 {
 	try {
@@ -618,17 +586,6 @@ bool Settings::getNoEx(const std::string &name, std::string &val) const
 {
 	try {
 		val = get(name);
-		return true;
-	} catch (SettingNotFoundException &e) {
-		return false;
-	}
-}
-
-
-bool Settings::getDefaultNoEx(const std::string &name, std::string &val) const
-{
-	try {
-		val = getDefault(name);
 		return true;
 	} catch (SettingNotFoundException &e) {
 		return false;

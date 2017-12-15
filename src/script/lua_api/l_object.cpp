@@ -55,7 +55,6 @@ struct EnumString es_HudElementStat[] =
 	{HUD_STAT_ALIGN,  "alignment"},
 	{HUD_STAT_OFFSET, "offset"},
 	{HUD_STAT_WORLD_POS, "world_pos"},
-	{HUD_STAT_SIZE, "size"},
 	{0, NULL},
 };
 

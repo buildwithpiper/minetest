@@ -21,17 +21,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "lua_api/l_internal.h"
 #include "common/c_content.h"
 #include "cpp_api/s_async.h"
-#include "gui/guiEngine.h"
-#include "gui/guiMainMenu.h"
-#include "gui/guiKeyChangeMenu.h"
-#include "gui/guiPathSelectMenu.h"
+#include "guiEngine.h"
+#include "guiMainMenu.h"
+#include "guiKeyChangeMenu.h"
+#include "guiPathSelectMenu.h"
 #include "subgame.h"
 #include "version.h"
 #include "porting.h"
 #include "filesys.h"
 #include "convert_json.h"
 #include "serverlist.h"
-#include "mapgen/mapgen.h"
+#include "mapgen.h"
 #include "settings.h"
 
 #include <IFileArchive.h>
@@ -532,7 +532,7 @@ int ModApiMainMenu::l_delete_world(lua_State *L)
 
 		std::vector<std::string> paths;
 		paths.push_back(spec.path);
-		fs::GetRecursiveSubPaths(spec.path, paths, true);
+		fs::GetRecursiveSubPaths(spec.path, paths);
 
 		// Delete files
 		if (!fs::DeletePaths(paths)) {

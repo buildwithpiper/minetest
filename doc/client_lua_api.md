@@ -618,7 +618,6 @@ Minetest namespace reference
 ### Utilities
 
 * `minetest.get_current_modname()`: returns the currently loading mod's name, when we are loading a mod
-* `minetest.get_language()`: returns the currently set gettext language.
 * `minetest.get_version()`: returns a table containing components of the
    engine version.  Components:
     * `project`: Name of the project, eg, "Minetest"
@@ -630,9 +629,6 @@ Minetest namespace reference
   version entirely. To check for the presence of engine features, test
   whether the functions exported by the wanted features exist. For example:
   `if minetest.check_for_falling then ... end`.
-* `minetest.sha1(data, [raw])`: returns the sha1 hash of data
-    * `data`: string of data to hash
-    * `raw`: return raw bytes instead of hex digits, default: false
 
 ### Logging
 * `minetest.debug(...)`

@@ -347,7 +347,6 @@ public:
 	bool joinModChannel(const std::string &channel);
 	bool leaveModChannel(const std::string &channel);
 	bool sendModChannelMessage(const std::string &channel, const std::string &message);
-	bool sendModChannelMessageToPlayer(const std::string &channel, const std::string &player, const std::string &message);
 	ModChannel *getModChannel(const std::string &channel);
 
 	// Bind address
@@ -402,8 +401,6 @@ private:
 			float thickness,
 			const v2f &speed);
 	void SendOverrideDayNightRatio(session_t peer_id, bool do_override, float ratio);
-	void sendModChannelMessage(const std::string &channel,
-			session_t to_peer, const std::string &message, session_t from_peer);
 	void broadcastModChannelMessage(const std::string &channel,
 			const std::string &message, session_t from_peer);
 
@@ -470,7 +467,6 @@ private:
 	void RespawnPlayer(session_t peer_id);
 	void DeleteClient(session_t peer_id, ClientDeletionReason reason);
 	void UpdateCrafting(RemotePlayer *player);
-	bool checkInteractDistance(RemotePlayer *player, const f32 d, const std::string what);
 
 	void handleChatInterfaceEvent(ChatEvent *evt);
 

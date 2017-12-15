@@ -27,9 +27,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "map.h"
 #include "mapblock.h"
 #include "server.h"
-#include "mapgen/mapgen.h"
+#include "mapgen.h"
 #include "voxelalgorithms.h"
-#include "remoteplayer.h"
 
 // garbage collector
 int LuaVoxelManip::gc_object(lua_State *L)
@@ -130,34 +129,6 @@ int LuaVoxelManip::l_write_to_map(lua_State *L)
 	map->dispatchEvent(&event);
 
 	o->modified_blocks.clear();
-	return 0;
-}
-
-int LuaVoxelManip::l_ghost_to_player(lua_State *L)
-{
-	NO_MAP_LOCK_REQUIRED;
-
-	LuaVoxelManip *o = checkobject(L, 1);
-	std::string name = luaL_checkstring(L, 2);
-
-	GET_ENV_PTR;
-	ServerMap *map = &(env->getServerMap());
-	RemotePlayer *player = env->getPlayer(name.c_str());
-	VoxelArea area = o->vm->m_area;
-
-	for ( s32 x = area.MinEdge.X; x < area.MaxEdge.X; ++x )
-	for ( s32 y = area.MinEdge.Y; y < area.MaxEdge.Y; ++y )
-	for ( s32 z = area.MinEdge.Z; z < area.MaxEdge.Z; ++z )
-	{
-		v3s16 pos(x,y,z);
-		MapNode e = map->getNodeNoEx(pos);
-		MapNode n = o->vm->m_data[area.index(x,y,z)];
-		if ( e == n )  continue;
-		//errorstream << "Had to send client " << pos.X << "," << pos.Y << "," << pos.Z << std::endl;
-		NetworkPacket pkt(TOCLIENT_ADDNODE, 6 + 2 + 1 + 1 + 1);
-		pkt << pos << n.param0 << n.param1 << n.param2 << (u8) (true ? 0 : 1);
-		getServer(L)->Send(player->getPeerId(), &pkt);
-	}
 	return 0;
 }
 
@@ -486,7 +457,6 @@ const luaL_Reg LuaVoxelManip::methods[] = {
 	luamethod(LuaVoxelManip, get_node_at),
 	luamethod(LuaVoxelManip, set_node_at),
 	luamethod(LuaVoxelManip, write_to_map),
-	luamethod(LuaVoxelManip, ghost_to_player),
 	luamethod(LuaVoxelManip, update_map),
 	luamethod(LuaVoxelManip, update_liquids),
 	luamethod(LuaVoxelManip, calc_lighting),

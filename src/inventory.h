@@ -111,15 +111,12 @@ struct ItemStack
 	const ToolCapabilities& getToolCapabilities(
 			IItemDefManager *itemdef) const
 	{
-		const ToolCapabilities *item_cap =
-			itemdef->get(name).tool_capabilities;
-
-		if (item_cap == NULL)
-			// Fall back to the hand's tool capabilities
-			item_cap = itemdef->get("").tool_capabilities;
-
-		assert(item_cap != NULL);
-		return metadata.getToolCapabilities(*item_cap); // Check for override
+		ToolCapabilities *cap;
+		cap = itemdef->get(name).tool_capabilities;
+		if(cap == NULL)
+			cap = itemdef->get("").tool_capabilities;
+		assert(cap != NULL);
+		return *cap;
 	}
 
 	// Wear out (only tools)
