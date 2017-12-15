@@ -306,13 +306,9 @@ if(WIN32)
 else()
 	# Unix probably
 	if(BUILD_CLIENT)
-<<<<<<< HEAD
-		find_package(X11 REQUIRED)
-=======
 		if(NOT HAIKU)
 			find_package(X11 REQUIRED)
 		endif(NOT HAIKU)
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 		if(NOT ENABLE_GLES)
 			find_package(OpenGL REQUIRED)
 		endif()

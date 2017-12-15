@@ -36,10 +36,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "util/string.h"
 #include "nodedef.h"
 #include "client/renderingengine.h"
-<<<<<<< HEAD
-=======
 #include "keycode.h"
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 
 int ModApiClient::l_get_current_modname(lua_State *L)
 {
@@ -412,36 +409,6 @@ int ModApiClient::l_send_keys(lua_State *L)
 	errorstream << key << std::endl;
 
 	irr::SEvent myEvent;
-<<<<<<< HEAD
-
-	if(key == "space")
-		myEvent.KeyInput.Key = irr::KEY_SPACE;
-	else if(key == "escape")
-		myEvent.KeyInput.Key = irr::KEY_ESCAPE;
-	else if(key == "a")
-		myEvent.KeyInput.Key = irr::KEY_KEY_A;
-	else if(key == "d")
-		myEvent.KeyInput.Key = irr::KEY_KEY_D;
-	else if(key == "s")
-		myEvent.KeyInput.Key = irr::KEY_KEY_S;
-	else if(key == "w")
-		myEvent.KeyInput.Key = irr::KEY_KEY_W;
-	else if(key == "i")
-		myEvent.KeyInput.Key = irr::KEY_KEY_I;
-	else if(key == "z")
-		myEvent.KeyInput.Key = irr::KEY_KEY_Z;
-
-	if (key.size() == 1)
-		myEvent.KeyInput.Char = key[0];
-
-
-	myEvent.EventType = irr::EET_KEY_INPUT_EVENT;
-	myEvent.KeyInput.PressedDown = down;
-
-	irr::IrrlichtDevice* dev = RenderingEngine::get_raw_device();
-	dev->postEventFromUser(myEvent);
-	return 0;
-=======
 	try {
 		KeyPress data(key.c_str());
 		myEvent.KeyInput.Key = data.key();
@@ -457,7 +424,6 @@ int ModApiClient::l_send_keys(lua_State *L)
 	}
 	
 	return 1;
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 }
 
 // Get the window id if we're on Linux, else 0
@@ -468,8 +434,6 @@ int ModApiClient::l_get_window_id(lua_State *L)
 	return 1;
 }
 
-<<<<<<< HEAD
-=======
 // Get client setting
 int ModApiClient::l_get_setting(lua_State *L)
 {
@@ -479,7 +443,6 @@ int ModApiClient::l_get_setting(lua_State *L)
 	return 1;
 }
 
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 // Change client setting
 int ModApiClient::l_set_setting(lua_State *L)
 {
@@ -515,18 +478,12 @@ void ModApiClient::Initialize(lua_State *L, int top)
 	API_FCT(take_screenshot);
 	API_FCT(get_privilege_list);
 	API_FCT(get_builtin_path);
-<<<<<<< HEAD
-=======
 	API_FCT(get_language);
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 	API_FCT(send_plugin_message);
 	API_FCT(free_cursor);
 	API_FCT(lock_cursor);
 	API_FCT(send_keys);
 	API_FCT(get_window_id);
 	API_FCT(set_setting);
-<<<<<<< HEAD
-=======
 	API_FCT(get_setting);
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 }

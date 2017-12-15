@@ -1848,16 +1848,9 @@ void Server::handleCommand_PluginMessage(NetworkPacket* pkt) {
 	std::string name;
 	std::string data;
 	*pkt >> name;
-<<<<<<< HEAD
-	errorstream << "Got name " << name << std::endl;
-	//std::string data = pkt->readLongString();
-	*pkt >> data;
-	errorstream << "Server: Got Plugin Message from " << playername << " for " << name << " with data [" << data << "]" << std::endl;
-=======
 	//std::string data = pkt->readLongString();
 	*pkt >> data;
 	verbosestream << "Server: Got Plugin Message from " << playername << " for " << name << " with data [" << data << "]" << std::endl;
->>>>>>> 75f044f51e07e4a5b6fe95d189d572a609ac4e3d
 	m_script->on_plugin_message(playername, name, data);
 
 }
