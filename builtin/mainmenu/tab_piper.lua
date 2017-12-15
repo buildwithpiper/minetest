@@ -84,19 +84,24 @@ local function get_formspec(tabview, name, tabdata)
         e("container[5,1]")
         e("textlist[-0.25,-0.1;7,2.5;us;" .. table.concat(list, ',') .. ';' .. n .. ';false]')
         e("container_end[]")
-		status = "Connecting..."
+        if need_restart then
+        	status = "Updating. You will need to restart your computer."
+        	xpos = '4.8'
+        else
+			status = "Connecting..."
+		end
 	elseif not data.name then
-		local xpos = '7.2'
+		xpos = '7.2'
 		status = "Connecting Failed"
 	end
 	e("label["..xpos..",3.88;" .. status .. ']')
 
-	
+
 	local function i(img)
 		return core.formspec_escape(defaulttexturedir .. "piper" .. DIR_DELIM .. img)
 	end
 
-		e("background[-0.2,-0.25;12.4,6.3;" .. i("background.png") .. "]")			
+		e("background[-0.2,-0.25;12.4,6.3;" .. i("background.png") .. "]")
         --21 - 3.7
 		e("label[" .. 1.9 - (#playername/2) * (3.2/22.0) .. ",4.08;" .. playername .. "]")
 		e("image_button[0.25,4.95;3.1,0.6;"..i("choosenewname.png")..";choosename;]")
