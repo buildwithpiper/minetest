@@ -8,9 +8,13 @@ core.chatcommands = core.registered_chatcommands -- BACKWARDS COMPATIBILITY
 
 core.register_on_chat_message(function(name, message)
 	if message:sub(1,1) ~= "/" then
-		if nicknames[name] then
+		local hasprivs = core.check_player_privs(name, 'shout')
+		if hasprivs and nicknames[name] then
 			core.chat_send_all('<' .. nicknames[name] .. '> ' .. message)
 			return true
+		else
+			core.chat_send_player(name, "Sorry, can't chat.")
+			return false
 		end
 	end
 
