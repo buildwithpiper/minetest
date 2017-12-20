@@ -57,6 +57,7 @@ public:
 	bool setWindowIcon();
 	bool setXorgWindowIconFromPath(const std::string &icon_file);
 	static bool print_video_modes();
+	static void hideWindowDecorations();
 
 	static RenderingEngine *get_instance() { return s_singleton; }
 
