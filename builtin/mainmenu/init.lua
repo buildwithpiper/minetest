@@ -179,3 +179,8 @@ end
 
 
 init_globals()
+
+if not core.settings:get_bool("dev_mode") then
+	local os = require('os')
+	os.execute('xdotool search --name Minetest windowmove 0 0 windowsize 848 480')
+end

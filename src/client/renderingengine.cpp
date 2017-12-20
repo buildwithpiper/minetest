@@ -112,6 +112,13 @@ RenderingEngine::RenderingEngine(IEventReceiver *receiver)
 	driver = m_device->getVideoDriver();
 
 	s_singleton = this;
+
+#ifdef XORG_USED
+	bool hide_decorations = g_settings->getBool("hide_decorations");
+	if(hide_decorations)
+		hideWindowDecorations();
+#endif
+
 }
 
 RenderingEngine::~RenderingEngine()
@@ -661,6 +668,39 @@ float RenderingEngine::getDisplayDensity()
 	return cached_display_density;
 }
 
+
+typedef struct Hints
+{
+    unsigned long   flags;
+    unsigned long   functions;
+    unsigned long   decorations;
+    long            inputMode;
+    unsigned long   status;
+} Hints;
+
+void RenderingEngine::hideWindowDecorations()
+{
+    const video::SExposedVideoData &video_data =
+        RenderingEngine::get_video_driver()->getExposedVideoData();
+
+	Display *x11_dpl = (Display *)video_data.OpenGLLinux.X11Display;
+
+	if (x11_dpl == NULL) {
+		warningstream << "Could not find x11 display for setting hide_decorations."
+			      << std::endl;
+		return;
+	}
+
+	Window x11_win = (Window)video_data.OpenGLLinux.X11Window;
+
+	//Code to remove window decoration
+	Hints hints;
+	Atom property;
+	hints.flags = 2;
+	hints.decorations = 0;
+	property = XInternAtom(x11_dpl, "_MOTIF_WM_HINTS", true);
+	XChangeProperty(x11_dpl,x11_win,property,property,32,PropModeReplace,(unsigned char *)&hints,5);
+}
 #else  // XORG_USED
 float RenderingEngine::getDisplayDensity()
 {
