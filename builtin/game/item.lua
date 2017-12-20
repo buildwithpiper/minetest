@@ -275,7 +275,7 @@ function core.item_place_node(itemstack, placer, pointed_thing, param2,
 	local playername = user_name(placer)
 	local log = make_log(playername)
 
-	if trigger.is_protected(above, "place", {name=itemstack:get_name()}) then
+	if minetest.is_protected(above, "place", {name=itemstack:get_name()}) then
 		return itemstack, false
 	end
 
