@@ -17,7 +17,6 @@
 
 --------------------------------------------------------------------------------
 local inventor_names = dofile(core.get_mainmenu_path()..DIR_DELIM.."names.lua")
-local piper_id = core.settings:get("piper_id")
 local playername = core.settings:get("piper_name")
 local devmode = core.settings:get("dev_mode")
 local tab
@@ -28,20 +27,6 @@ local need_restart = false
 local basepath = core.get_builtin_path()
 local update = {finished=false, active=true, status=""}
 
-local function choose_new_id()
-	math.randomseed( os.time() )
-	local random = math.random
-    local template ='xxxxxxxx-xxxx-4xxx'
-    template = string.gsub(template, '[xy]', function (c)
-        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
-        return string.format('%x', v)
-    end)
-
-	core.settings:set("piper_id", template)
-	piper_id = template
-	return id
-end
-
 local function choose_new_name()
 	repeat
 		playername = inventor_names[math.random(#inventor_names)]
@@ -50,7 +35,6 @@ local function choose_new_name()
 	return playername
 end
 
-if not piper_id then choose_new_id() end
 if not playername then choose_new_name() end
 
 local function draw_grid()
@@ -221,7 +205,7 @@ local function main_button_handler(tabview, fields, name, tabdata)
 	end
 
 	if fields.join then
-		gamedata.playername = core.settings:get("piper_id")
+		gamedata.playername = core.settings:get("piper_name")
 		gamedata.password   = ""
 		gamedata.address    = data.server
 		gamedata.port       = data.port
