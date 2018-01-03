@@ -257,6 +257,7 @@ void ScriptApiSecurity::initializeSecurityClient()
 		"table",
 		"math",
 		"require",
+		"package"
 	};
 	static const char *os_whitelist[] = {
 		"clock",

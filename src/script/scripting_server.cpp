@@ -44,6 +44,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "lua_api/l_http.h"
 #include "lua_api/l_storage.h"
 #include "lua_api/l_duktape.h"
+#include "luasocket.h"
 
 extern "C" {
 #include "lualib.h"
@@ -58,7 +59,7 @@ ServerScripting::ServerScripting(Server* server)
 	// once the environment has been created
 
 	SCRIPTAPI_PRECHECKHEADER
-
+	love::luasocket::__open(L);
 	if (g_settings->getBool("secure.enable_security")) {
 		initializeSecurity();
 	}
@@ -105,6 +106,7 @@ void ServerScripting::InitializeModApi(lua_State *L, int top)
 	ModChannelRef::Register(L);
 	LuaDuktape::Register(L);
 
+	
 	// Initialize mod api modules
 	ModApiCraft::Initialize(L, top);
 	ModApiEnvMod::Initialize(L, top);
@@ -118,6 +120,7 @@ void ServerScripting::InitializeModApi(lua_State *L, int top)
 	ModApiHttp::Initialize(L, top);
 	ModApiStorage::Initialize(L, top);
 	ModApiChannels::Initialize(L, top);
+
 }
 
 void log_deprecated(const std::string &message)
