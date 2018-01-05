@@ -26,6 +26,7 @@ core.register_on_chat_message(function(name, message)
 	end
 	local has_privs, missing_privs = core.check_player_privs(name, cmd_def.privs)
 	if has_privs then
+		print(name .. ' ran the chatcommand ' .. message)
 		core.set_last_run_mod(cmd_def.mod_origin)
 		local success, message = cmd_def.func(name, param)
 		if message then
