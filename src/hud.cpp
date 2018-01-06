@@ -317,7 +317,7 @@ void Hud::drawLuaElements(const v3s16 &camera_offset)
 										 (e->number >> 0)  & 0xFF);
 				core::rect<s32> size(0, 0, e->scale.X, text_height * e->scale.Y);
 				std::wstring text = unescape_translate(utf8_to_wide(e->text));
-				uint fontsize = FONT_SIZE_UNSPECIFIED;
+				s32 fontsize = FONT_SIZE_UNSPECIFIED;
 				if ( e->size != v2s32() ) fontsize = e->size.X;
 				irr::gui::IGUIFont* font = g_fontengine->getFont(fontsize, FM_Unspecified);
 				core::dimension2d<u32> textsize = font->getDimension(text.c_str());
