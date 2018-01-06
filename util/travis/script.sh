@@ -28,6 +28,7 @@ if [[ ${PLATFORM} == "Unix" ]]; then
 		-DBUILD_SERVER=TRUE \
 		${CMAKE_FLAGS} ..
 	make -j2
+	make package
 
 	echo "Running unit tests."
 	CMD="../bin/minetest --run-unittests"

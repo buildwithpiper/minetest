@@ -272,7 +272,7 @@ if(WIN32)
 		# Dont define min/max macros in minwindef.h
 		add_definitions(/D "NOMINMAX")
 	else() # Probably MinGW = GCC
-		set(PLATFORM_LIBS "")
+		set(PLATFORM_LIBS "-static")
 	endif()
 	set(PLATFORM_LIBS ws2_32.lib version.lib shlwapi.lib ${PLATFORM_LIBS})
 

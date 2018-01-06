@@ -41,7 +41,7 @@ install_macosx_deps() {
 }
 
 # Relative to git-repository root:
-TRIGGER_COMPILE_PATHS="src/.*\.(c|cpp|h)|CMakeLists.txt|cmake/Modules/|util/travis/|util/buildbot/"
+TRIGGER_COMPILE_PATHS="src/.*\.(c|cpp|h)|CMakeLists.txt|src/CMakeLists.txt|cmake/Modules/|util/travis/|util/buildbot/|.travis.yml"
 
 needs_compile() {
 	RANGE="$TRAVIS_COMMIT_RANGE"
