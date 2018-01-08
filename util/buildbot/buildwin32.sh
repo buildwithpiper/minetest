@@ -101,6 +101,8 @@ cmake .. \
 	-DENABLE_FREETYPE=1 \
 	-DENABLE_LEVELDB=1 \
 	\
+	-DLUASOCKET_INET_PTON=1 \
+	\
 	-DIRRLICHT_INCLUDE_DIR=$libdir/irrlicht/include \
 	-DIRRLICHT_LIBRARY=$libdir/irrlicht/lib/Win32-gcc/libIrrlicht.dll.a \
 	-DIRRLICHT_DLL=$libdir/irrlicht/bin/Win32-gcc/Irrlicht.dll \
