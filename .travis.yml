@@ -50,7 +50,7 @@ matrix:
       addons:
         artifacts:
           paths:
-            - $(git ls-files -o | grep zip$ | tr "\n" ":")
+            - $(git ls-files -o | grep tar.gz$ | tr "\n" ":")
         apt:
           packages: ['gcc-6', 'g++-6']
           sources: &sources
@@ -80,7 +80,7 @@ matrix:
       addons:
         artifacts:
           paths:
-            - $(git ls-files -o | grep zip$ | tr "\n" ":")
+            - $(git ls-files -o | grep tar.gz$ | tr "\n" ":")
         apt:
           packages: ['clang-5.0', 'clang++-5.0']
           sources: &sources
