@@ -22,6 +22,10 @@ if [[ ${PLATFORM} == "Unix" ]]; then
 		CMAKE_FLAGS+=' -DCUSTOM_GETTEXT_PATH=/usr/local/opt/gettext'
 	fi
 
+	if [[ ${COMPILER} == "arm-linux-gnueabihf-gcc" ]]; then
+		CMAKE_FLAGS+=' -DCMAKE_TOOLCHAIN_FILE=util/travis/toolchain_raspbian.cmake'
+	fi
+
 	cmake -DCMAKE_BUILD_TYPE=Debug \
 		-DRUN_IN_PLACE=TRUE \
 		-DENABLE_GETTEXT=TRUE \

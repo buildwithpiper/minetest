@@ -12,8 +12,12 @@ needs_compile || exit 0
 
 if [[ $PLATFORM == "Unix" ]]; then
 	if [[ $TRAVIS_OS_NAME == "linux" ]]; then
-		install_linux_deps
-	else
+		if [[ $COMPILER == "arm-linux-gnueabihf-gcc" ]]; then
+			install_raspbian_deps
+		else
+			install_linux_deps
+		fi
+	elif [[ $TRAVIS_OS_NAME == "osx" ]]; then
 		install_macosx_deps
 	fi
 elif [[ $PLATFORM == "Win32" ]]; then

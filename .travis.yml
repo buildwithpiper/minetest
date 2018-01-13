@@ -95,6 +95,14 @@ matrix:
           sources: &sources
             - llvm-toolchain-trusty-5.0
 
+    - env: PLATFORM=Unix COMPILER=arm-linux-gnueabihf-gcc
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          packages: []
+          sources: &sources
+
     - env: LINT=1
       compiler: clang
       os: linux

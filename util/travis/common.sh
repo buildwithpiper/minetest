@@ -16,6 +16,9 @@ set_linux_compiler_env() {
 	elif [[ "${COMPILER}" == "clang-5.0" ]]; then
 		export CC=clang-5.0
 		export CXX=clang++-5.0
+	elif [[ "${COMPILER}" == "arm-linux-gnueabihf-gcc" ]]; then
+		export CC=arm-linux-gnueabihf-gcc
+		export CXX=arm-linux-gnueabihf-gcc
 	fi
 }
 
@@ -26,6 +29,23 @@ install_linux_deps() {
 		libjpeg-dev libxxf86vm-dev libgl1-mesa-dev libsqlite3-dev \
 		libhiredis-dev libogg-dev libgmp-dev libvorbis-dev libopenal-dev \
 		gettext libpq-dev libleveldb-dev
+}
+
+
+# Raspbian build only
+install_raspbian_deps() {
+	wget https://archive.raspbian.org/raspbian.public.key -O - | sudo apt-key add -
+
+	echo 'deb http://archive.raspbian.org/raspbian wheezy main' | sudo tee -a /etc/apt/sources.list
+	echo 'deb-src http://archive.raspbian.org/raspbian wheezy main' | sudo tee -a /etc/apt/sources.list
+
+	git clone https://github.com/raspberrypi/tools ~/tools
+	sudo dpkg --add-architecture armhf
+	sudo apt-get update
+	sudo apt-get install libirrlicht-dev:armhf cmake:armhf libbz2-dev:armhf libpng12-dev:armhf \
+		libjpeg-dev:armhf libxxf86vm-dev:armhf libgl1-mesa-dev:armhf libsqlite3-dev:armhf \
+		libhiredis-dev:armhf libogg-dev:armhf libgmp-dev:armhf libvorbis-dev:armhf libopenal-dev:armhf \
+		gettext:armhf libpq-dev:armhf libleveldb-dev:armhf
 }
 
 # Mac OSX build only
