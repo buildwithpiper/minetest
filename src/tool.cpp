@@ -175,17 +175,11 @@ DigParams getDigParams(const ItemGroupList &groups,
 	// Group dig_immediate has fixed time and no wear
 	switch (itemgroup_get(groups, "dig_immediate")) {
 	case 2:
-		return DigParams(true, 0.5, 0, "dig_immediate");
-	case 3:
-		return DigParams(true, 0, 0, "dig_immediate");
-	default:
-		return DigParams(true, 0.5, 0, "dig_immediate");
-	case 2:
 		return DigParams(true, 0.15, 0, "dig_immediate");
 	case 3:
 		return DigParams(true, 0, 0, "dig_immediate");
 	default:
-		break;
+		return DigParams(true, 0.5, 0, "dig_immediate");
 	}
 
 	// Values to be returned (with a bit of conversion)

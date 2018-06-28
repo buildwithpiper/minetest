@@ -158,6 +158,7 @@ void ScriptApiServer::on_mods_loaded()
 	lua_getfield(L, -1, "registered_on_mods_loaded");
 	// Call callbacks
 	runCallbacks(0, RUN_CALLBACKS_MODE_FIRST);
+}
 
 bool ScriptApiServer::on_plugin_message(const std::string &name, const std::string &plugin, const std::string &message)
 {

@@ -79,6 +79,6 @@ public:
 	virtual bool sendModChannelMessage(const std::string &channel,
 		const std::string &message) = 0;
 	virtual bool sendModChannelMessageToPlayer(const std::string &channel,
-		const std::string &player, const std::string &message) = 0;	
+		const std::string &player, const std::string &message) = 0;
 	virtual ModChannel *getModChannel(const std::string &channel) = 0;
 };

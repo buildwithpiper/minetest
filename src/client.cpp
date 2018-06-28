@@ -1949,6 +1949,11 @@ bool Client::leaveModChannel(const std::string &channel)
 	return true;
 }
 
+bool Client::sendModChannelMessageToPlayer(const std::string &channel, const std::string &player, const std::string &message) {
+    warningstream << "Mod channel message from client to client not implemented" << std::endl;
+    return false;
+}
+
 bool Client::sendModChannelMessage(const std::string &channel, const std::string &message)
 {
 	if (!m_modchannel_mgr->canWriteOnChannel(channel))

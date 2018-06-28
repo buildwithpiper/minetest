@@ -357,7 +357,6 @@ public:
 		joystick.clearWasKeyDown(KeyType::MOUSE_R);
 	}
 
-<<<<<<< HEAD
 	virtual bool getLeftReleased()
 	{
 		return m_receiver->leftreleased ||

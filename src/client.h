@@ -433,6 +433,7 @@ public:
 	bool leaveModChannel(const std::string &channel) override;
 	bool sendModChannelMessage(const std::string &channel,
 			const std::string &message) override;
+	bool sendModChannelMessageToPlayer(const std::string &channel, const std::string &player, const std::string &message);
 	ModChannel *getModChannel(const std::string &channel) override;
 
 	const std::string &getFormspecPrepend() const

@@ -123,13 +123,9 @@ private:
 	// place_schematic(p, schematic, rotation,
 	//     replacements, force_placement, flagstring)
 	static int l_place_schematic(lua_State *L);
-
     
     // get_schematic_size(schematic)
     static int l_get_schematic_size(lua_State *L);
-
-	// place_schematic(p, schematic, rotation, replacements, force_placement)
-	static int l_place_schematic(lua_State *L);
 
     // erase schematic(schematic)
 	static int l_erase_schematic(lua_State *L);
