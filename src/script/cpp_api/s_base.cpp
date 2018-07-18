@@ -151,6 +151,7 @@ void ScriptApiBase::clientOpenLibs(lua_State *L)
 		{ LUA_LOADLIBNAME, luaopen_package },
 		{ LUA_IOLIBNAME,   luaopen_io      },
 		{ LUA_FFILIBNAME,  luaopen_ffi     },
+		{ LUA_BITLIBNAME,  luaopen_bit     },
 #if USE_LUAJIT
 		{ LUA_JITLIBNAME,  luaopen_jit     },
 #endif
