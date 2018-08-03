@@ -3,7 +3,7 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 
 set(project /mnt/hgfs/Developer/Piper/piper-builder)
 set(CMAKE_SYSROOT ${project}/erootfs)
-set(CMAKE_STAGING_PREFIX ${project}/erootfs)
+set(CMAKE_STAGING_PREFIX ${project}/erootfs/usr/share/minetest)
 
 set(tools /usr/bin)
 set(CMAKE_C_COMPILER ${tools}/arm-linux-gnueabihf-gcc)
