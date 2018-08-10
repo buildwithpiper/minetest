@@ -9,11 +9,11 @@ cmake . -DCMAKE_BUILD_TYPE=Release \
 	-DLUA_INCLUDE_DIR=${EROOTFS}/usr/include/luajit-2.0 \
         -DENABLE_LUAJIT=YES \
 	-DRUN_IN_PLACE=TRUE \
-	-DENABLE_GLES=0 \
+	-DENABLE_GLES=1 \
 	-DBUILD_SERVER=NO \
 	-DIRRLICHT_SOURCE_DIR=irrlicht/source/Irrlicht/ \
-	-DIRRLICHT_LIBRARY=irrlicht/lib/Linux/libIrrlicht.a \
+	-DIRRLICHT_LIBRARY=irrlicht/lib/Linux/libIrrlicht.so.1.9.0 \
 	-DIRRLICHT_INCLUDE_DIR=irrlicht/include/ \
-	-DCMAKE_EXE_LINKER_FLAGS=''
+	-DCMAKE_EXE_LINKER_FLAGS='-L${EROOTFS}/usr/lib -lEGL -lGLESv2'
 
 make -j $(nproc || sysctl -n hw.ncpu || echo 2)
