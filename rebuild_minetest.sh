@@ -4,8 +4,8 @@ set -o errtrace
 trap 'echo "Aborting due to errexit on line $LINENO. Exit code: $?" >&2' ERR
 set -o pipefail
 
-EGL_MESA=1
-EGL_BROADCOM=0
+EGL_MESA=0
+EGL_BROADCOM=1
 
 if [ $EGL_BROADCOM -eq 1 ]; then
 	EGL_INC=${EROOTFS}/opt/vc/include
@@ -26,7 +26,7 @@ cmake . -DCMAKE_BUILD_TYPE=Release \
 	-DLUA_INCLUDE_DIR=${EROOTFS}/usr/include/luajit-2.0 \
         -DENABLE_LUAJIT=YES \
 	-DRUN_IN_PLACE=TRUE \
-	-DENABLE_GLES=$EGL_MESA||$EGL_BROADCOM \
+	-DENABLE_GLES=$EGL_BROADCOM \
 	-DEGL_INCLUDE_DIR=$EGL_INC \
 	-DOPENGLES2_INCLUDE_DIR=$EGL_INC \
 	-DBUILD_SERVER=NO \
