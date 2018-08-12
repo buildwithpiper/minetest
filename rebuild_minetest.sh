@@ -5,7 +5,7 @@ trap 'echo "Aborting due to errexit on line $LINENO. Exit code: $?" >&2' ERR
 set -o pipefail
 
 EGL_MESA=0
-EGL_BROADCOM=1
+EGL_BROADCOM=0
 
 if [ $EGL_BROADCOM -eq 1 ]; then
 	EGL_INC=${EROOTFS}/opt/vc/include
@@ -26,12 +26,12 @@ cmake . -DCMAKE_BUILD_TYPE=Release \
 	-DLUA_INCLUDE_DIR=${EROOTFS}/usr/include/luajit-2.0 \
         -DENABLE_LUAJIT=YES \
 	-DRUN_IN_PLACE=TRUE \
-	-DENABLE_GLES=$EGL_BROADCOM \
+	-DENABLE_GLES=0 \
 	-DEGL_INCLUDE_DIR=$EGL_INC \
 	-DOPENGLES2_INCLUDE_DIR=$EGL_INC \
 	-DBUILD_SERVER=NO \
 	-DIRRLICHT_SOURCE_DIR=irrlicht/source/Irrlicht/ \
-	-DIRRLICHT_LIBRARY=irrlicht/lib/Linux/libIrrlicht.so \
+	-DIRRLICHT_LIBRARY=irrlicht/lib/Linux/libIrrlicht.a \
 	-DIRRLICHT_INCLUDE_DIR=irrlicht/include/ \
 	-DCMAKE_EXE_LINKER_FLAGS="${EGL_LINK}"
 
